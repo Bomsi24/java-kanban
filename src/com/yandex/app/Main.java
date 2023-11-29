@@ -1,3 +1,10 @@
+package com.yandex.app;
+
+import com.yandex.app.model.Task;
+import com.yandex.app.model.SubTask;
+import com.yandex.app.model.Epic;
+import com.yandex.app.service.Manager;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -32,8 +39,8 @@ public class Main {
         System.out.println(manager.getAllSubTasks());
 
         manager.updateSubTask(subTask1,"DONE");
-        System.out.println(epic1.status);
+        System.out.println(epic1.getStatus());
         manager.updateSubTask(subTask2,"DONE");
-        System.out.println(epic1.status);
+        System.out.println(epic1.getStatus());
     }
 }
