@@ -1,20 +1,20 @@
 package com.yandex.app.model;
 
 public class SubTask extends Task {
-    private final int idEpic;
+    private final Epic epic;
 
-    SubTask(String name, String description, Epic epic) {
-        super(name, description);
-        idEpic = epic.id;
+    public SubTask(String name, String description,String status,int id,Epic epic) {
+        super(name, description,status,id);
+        this.epic = epic;
 
     }
 
-
-    public int getId() {
-        return id;
+    public SubTask(String name, String description, Epic epic){
+        super(name,description);
+        this.epic = epic;
     }
 
     public int getEpicId() {
-        return idEpic;
+        return epic.id;
     }
 }

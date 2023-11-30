@@ -5,10 +5,14 @@ import java.util.ArrayList;
 public class Epic extends Task {
     private final ArrayList<Integer> subTasksId = new ArrayList<>();
 
-    Epic(String name, String description) {
+    public Epic(String name, String description, int id) {
         super(name, description);
+        this.setId(id);
     }
 
+    public Epic(String name, String description) {
+        super(name, description);
+    }
 
     public void setStatus(String status) {
         this.status = status;
@@ -27,17 +31,13 @@ public class Epic extends Task {
         return subTasksId;
     }
 
-    public void deleteElementSubTask(int id) {
+    public void deleteElementSubTask(Integer id) {
         subTasksId.remove(id);
     }
-
 
     public void clearSubTask() {
         subTasksId.clear();
     }
 
-    public int getId() {
-        return id;
-    }
 }
 
