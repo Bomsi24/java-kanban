@@ -67,9 +67,9 @@ public class Manager {
 
     public Task getTaskById(Integer id) {
         if (!tasks.isEmpty()) {
-            for (Integer i : tasks.keySet()) {
-                if (i.equals(id)) {
-                    return tasks.get(i);
+            for (Integer idTask : tasks.keySet()) {
+                if (idTask.equals(id)) {
+                    return tasks.get(idTask);
                 }
             }
         }
@@ -78,9 +78,9 @@ public class Manager {
 
     public Epic getEpicById(Integer id) {
         if (!epics.isEmpty()) {
-            for (Integer i : epics.keySet()) {
-                if (i.equals(id)) {
-                    return epics.get(i);
+            for (Integer idEpic : epics.keySet()) {
+                if (idEpic.equals(id)) {
+                    return epics.get(idEpic);
                 }
             }
         }
@@ -89,9 +89,9 @@ public class Manager {
 
     public SubTask getSubTaskById(Integer id) {
         if (!subTasks.isEmpty()) {
-            for (Integer i : subTasks.keySet()) {
-                if (i.equals(id)) {
-                    return subTasks.get(i);
+            for (Integer idSubTask : subTasks.keySet()) {
+                if (idSubTask.equals(id)) {
+                    return subTasks.get(idSubTask);
                 }
             }
         }
@@ -100,9 +100,9 @@ public class Manager {
 
     public void deleteTaskInId(Integer id) {
         if (!tasks.isEmpty()) {
-            for (Integer i : tasks.keySet()) {
-                if (i.equals(id)) {
-                    tasks.remove(i);
+            for (Integer idTask : tasks.keySet()) {
+                if (idTask.equals(id)) {
+                    tasks.remove(idTask);
                     return;
                 }
             }
@@ -112,12 +112,12 @@ public class Manager {
 
     public void deleteEpicInId(Integer id) {
         if (!epics.isEmpty()) {
-            for (Integer i : epics.keySet()) {
-                if (i.equals(id)) {
-                    for (Integer index : epics.get(i).getSubTasks()) {
+            for (Integer idEpic : epics.keySet()) {
+                if (idEpic.equals(id)) {
+                    for (Integer index : epics.get(idEpic).getSubTasks()) {
                         subTasks.remove(index);
                     }
-                    epics.remove(i);
+                    epics.remove(idEpic);
                     return;
                 }
             }
@@ -128,10 +128,10 @@ public class Manager {
 
     public void deleteSubTaskInId(Integer id) {
         if (!subTasks.isEmpty()) {
-            for (Integer i : subTasks.keySet()) {
-                if (i.equals(id)) {
-                    Epic epic = getEpicById(subTasks.get(i).getEpicId());
-                    epic.deleteElementSubTask(i);
+            for (Integer idSubTask : subTasks.keySet()) {
+                if (idSubTask.equals(id)) {
+                    Epic epic = getEpicById(subTasks.get(idSubTask).getEpicId());
+                    epic.deleteElementSubTask(idSubTask);
                     subTasks.remove(id);
                     updateStatusEpic(epic);
                     return;
