@@ -2,11 +2,15 @@ package com.yandex.app.model;
 
 public class Task {
 
-    public String[] statuses = {
-            "NEW", "IN_PROGRESS", "DONE"};
+
+    public enum Statuses {
+        NEW,
+        IN_PROGRESS,
+        DONE
+    }
     protected String name;
     protected String description;
-    protected String status;
+    protected Statuses status;
     protected int id;
 
     @Override
@@ -17,7 +21,7 @@ public class Task {
                 ", id=" + id;
     }
 
-    public Task(String name, String description, String status, int id) {
+    public Task(String name, String description, Statuses status, int id) {
         this.name = name;
         this.description = description;
         this.status = status;
@@ -27,7 +31,7 @@ public class Task {
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.status = statuses[0];
+        this.status = Statuses.NEW;
     }
 
     public String getName() {
@@ -38,7 +42,7 @@ public class Task {
         return description;
     }
 
-    public String getCurrentStatus() {
+    public Statuses getCurrentStatus() {
         return status;
     }
 

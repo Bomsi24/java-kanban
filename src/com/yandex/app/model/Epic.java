@@ -14,13 +14,13 @@ public class Epic extends Task {
         super(name, description);
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Statuses status) {
         this.status = status;
     }
 
-    public String getStatus(int index) {
-        return statuses[index];
-    }
+    //public String getStatus(int index) {
+   //     return statuses[index];
+   // }
 
     public void setSubTasks(int id) {
 
