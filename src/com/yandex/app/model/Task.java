@@ -2,12 +2,6 @@ package com.yandex.app.model;
 
 public class Task {
 
-
-    public enum Statuses {
-        NEW,
-        IN_PROGRESS,
-        DONE
-    }
     protected String name;
     protected String description;
     protected Statuses status;
@@ -19,13 +13,6 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 ", id=" + id;
-    }
-
-    public Task(String name, String description, Statuses status, int id) {
-        this.name = name;
-        this.description = description;
-        this.status = status;
-        this.id = id;
     }
 
     public Task(String name, String description) {
@@ -40,6 +27,10 @@ public class Task {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setStatus(Statuses status) { // обновление статуса
+        this.status = status;
     }
 
     public Statuses getCurrentStatus() {
