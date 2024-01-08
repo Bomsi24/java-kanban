@@ -25,25 +25,42 @@ public class Main {
         SubTask subTask2 = manager.create(new SubTask("Найм строителей",
                 "Нужно на сайте Ovito найти строителей",
                 epic1));
-        Epic epic2 = manager.create(new Epic("Отпуск", "Подготовиться к отпуску"));
         SubTask subTask3 = manager.create(new SubTask("Выбор места для отпуска",
                 "Нужно в турфирме Манго выбрать в какую страну лететь отдыхать ",
-                epic2));
+                epic1));
+        Epic epic2 = manager.create(new Epic("Отпуск", "Подготовиться к отпуску"));
 
         manager.getEpic(epic1.getId());
         System.out.println("История просмотров: " + manager.getHistory());
         manager.getTask(task2.getId());
         System.out.println("История просмотров: " + manager.getHistory());
-        manager.deleteEpicInId(epic2.getId());
+        manager.getEpic(epic1.getId());
         System.out.println("История просмотров: " + manager.getHistory());
-        manager.getAllEpics();
+        manager.getSubTask(subTask2.getId());
         System.out.println("История просмотров: " + manager.getHistory());
-        manager.getAllSubTasks();
+        manager.getSubTask(subTask1.getId());
         System.out.println("История просмотров: " + manager.getHistory());
-        subTask2.setStatus(Statuses.DONE);
-        manager.update(subTask2);
+        manager.getSubTask(subTask3.getId());
+        System.out.println("История просмотров: " + manager.getHistory());
+        manager.getSubTask(subTask3.getId());
+        System.out.println("История просмотров: " + manager.getHistory());
+        manager.getTask(task2.getId());
+        System.out.println("История просмотров: " + manager.getHistory());
+        manager.getEpic(epic2.getId());
+        System.out.println("История просмотров: " + manager.getHistory());
+        manager.getEpic(epic2.getId());
+        System.out.println("История просмотров: " + manager.getHistory());
+        manager.getTask(task1.getId());
+        System.out.println("История просмотров: " + manager.getHistory());
+        manager.getTask(task1.getId());
+        System.out.println("История просмотров: " + manager.getHistory());
+        manager.getTask(task2.getId());
         System.out.println("История просмотров: " + manager.getHistory());
 
+        manager.deleteTaskInId(task2.getId());
+        System.out.println("История просмотров после удаления: " + manager.getHistory());
+        manager.deleteEpicInId(epic1.getId());
+        System.out.println("История просмотров после удаления: " + manager.getHistory());
 
     }
 

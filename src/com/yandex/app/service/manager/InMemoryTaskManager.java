@@ -110,6 +110,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTaskInId(Integer id) {
         if (!tasks.isEmpty()) {
             tasks.remove(id);
+            historyManager.remove(id);
         }
 
     }
@@ -119,8 +120,10 @@ public class InMemoryTaskManager implements TaskManager {
         if (!epics.isEmpty()) {
             for (SubTask index : epics.get(id).getSubTasks()) {
                 subTasks.remove(index.getId());
+                historyManager.remove(index.getId());
             }
             epics.remove(id);
+            historyManager.remove(id);
         }
 
     }
@@ -130,7 +133,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (!subTasks.isEmpty()) {
             Epic epic = subTasks.get(id).getEpicOfSubTask();
             epic.deleteElementSubTask(subTasks.get(id));
+            historyManager.remove(subTasks.get(id).getId());//удаляем эпик
             subTasks.remove(id);
+            historyManager.remove(id);
             updateStatusEpic(epic);
         }
     }
