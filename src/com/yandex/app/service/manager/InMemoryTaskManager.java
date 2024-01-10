@@ -61,17 +61,29 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTasks() {
+        for (Integer idTask : tasks.keySet()) {
+            historyManager.remove(idTask);
+        }
         tasks.clear();
     }
 
     @Override
     public void deleteEpics() {
+        for (Integer idEpic : epics.keySet()) {
+            historyManager.remove(idEpic);
+            for (SubTask idSubTask : epics.get(idEpic).getSubTasks()) {
+                historyManager.remove(idSubTask.getId());
+            }
+        }
         epics.clear();
-        subTasks.clear();// удаляем подзадачи потому что их без эпика несуществует
+        subTasks.clear();// удаляем подзадачи потому что их без эпика не существует
     }
 
     @Override
     public void deleteSubTasks() {
+        for (Integer idSubTask : subTasks.keySet()) {
+            historyManager.remove(idSubTask);
+        }
         subTasks.clear();
         for (Epic epic : epics.values()) {
             epic.clearSubTask();
@@ -133,7 +145,6 @@ public class InMemoryTaskManager implements TaskManager {
         if (!subTasks.isEmpty()) {
             Epic epic = subTasks.get(id).getEpicOfSubTask();
             epic.deleteElementSubTask(subTasks.get(id));
-            historyManager.remove(subTasks.get(id).getId());//удаляем эпик
             subTasks.remove(id);
             historyManager.remove(id);
             updateStatusEpic(epic);

@@ -30,6 +30,7 @@ public class Main {
                 epic1));
         Epic epic2 = manager.create(new Epic("Отпуск", "Подготовиться к отпуску"));
 
+
         manager.getEpic(epic1.getId());
         System.out.println("История просмотров: " + manager.getHistory());
         manager.getTask(task2.getId());
@@ -45,22 +46,39 @@ public class Main {
         manager.getSubTask(subTask3.getId());
         System.out.println("История просмотров: " + manager.getHistory());
         manager.getTask(task2.getId());
+
+        manager.deleteSubTaskInId(subTask2.getId());
+        System.out.println("История просмотров: " + manager.getHistory());
+
         System.out.println("История просмотров: " + manager.getHistory());
         manager.getEpic(epic2.getId());
+
+        manager.deleteEpicInId(epic1.getId());
+        System.out.println("История просмотров, после удаления эпика: " + manager.getHistory());
+
         System.out.println("История просмотров: " + manager.getHistory());
         manager.getEpic(epic2.getId());
         System.out.println("История просмотров: " + manager.getHistory());
         manager.getTask(task1.getId());
         System.out.println("История просмотров: " + manager.getHistory());
         manager.getTask(task1.getId());
+
+        manager.deleteTaskInId(task2.getId());
+        System.out.println("История просмотров: " + manager.getHistory());
+
         System.out.println("История просмотров: " + manager.getHistory());
         manager.getTask(task2.getId());
         System.out.println("История просмотров: " + manager.getHistory());
 
-        manager.deleteTaskInId(task2.getId());
+        manager.deleteEpics();
         System.out.println("История просмотров после удаления: " + manager.getHistory());
-        manager.deleteEpicInId(epic1.getId());
-        System.out.println("История просмотров после удаления: " + manager.getHistory());
+
+        manager.getTask(task1.getId());
+        System.out.println("История просмотров: " + manager.getHistory());
+        manager.getTask(task2.getId());
+        System.out.println("История просмотров: " + manager.getHistory());
+        manager.deleteTasks();
+        System.out.println("История просмотров пустая: " + manager.getHistory());
 
     }
 
