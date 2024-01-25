@@ -4,8 +4,10 @@ import com.yandex.app.model.Statuses;
 import com.yandex.app.model.Task;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Epic;
+import com.yandex.app.service.manager.FileBackedTasksManager;
 import com.yandex.app.service.manager.Managers;
 import com.yandex.app.service.manager.TaskManager;
+
 
 public class Main {
 
@@ -29,6 +31,7 @@ public class Main {
                 "Нужно в турфирме Манго выбрать в какую страну лететь отдыхать ",
                 epic1));
         Epic epic2 = manager.create(new Epic("Отпуск", "Подготовиться к отпуску"));
+
 
 
         manager.getEpic(epic1.getId());
@@ -80,6 +83,10 @@ public class Main {
         manager.deleteTasks();
         System.out.println("История просмотров пустая: " + manager.getHistory());
 
+
+
     }
 
 }
+
+

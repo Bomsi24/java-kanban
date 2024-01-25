@@ -2,23 +2,26 @@ package com.yandex.app.model;
 
 public class Task {
 
+    protected int id = -1;
+    protected TypeTasks type;
     protected String name;
-    protected String description;
     protected Statuses status;
-    protected int id;
+    protected String description;
 
     @Override
     public String toString() {
-        return '\n' + "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
-                ", id=" + id;
+        return '\n' + Integer.toString(id) + ',' +
+                type + ',' +
+                name + ',' +
+                status + ',' +
+                description;
     }
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Statuses.NEW;
+        this.type = TypeTasks.TASK;
     }
 
     public String getName() {
@@ -43,6 +46,9 @@ public class Task {
 
     public int getId() {
         return id;
+    }
+    public void setType(TypeTasks type){
+        this.type = type;
     }
 }
 

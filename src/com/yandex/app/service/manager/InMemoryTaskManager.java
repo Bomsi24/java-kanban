@@ -13,29 +13,35 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
     private int idTask = 0;//идентификатор
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
+    protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
-    private final Map<Integer, Task> tasks = new HashMap<>();
-    private final Map<Integer, Epic> epics = new HashMap<>();
-    private final Map<Integer, SubTask> subTasks = new HashMap<>();
+    protected final Map<Integer, Task> tasks = new HashMap<>();
+    protected final Map<Integer, Epic> epics = new HashMap<>();
+    protected final Map<Integer, SubTask> subTasks = new HashMap<>();
 
     @Override
     public Task create(Task task) {
-        task.setId(addId());
+        if(task.getId() < 0) {
+            task.setId(addId());
+        }
         tasks.put(task.getId(), task);
         return task;
     }
 
     @Override
     public Epic create(Epic epic) {
-        epic.setId(addId());
+        if(epic.getId() < 0) {
+            epic.setId(addId());
+        }
         epics.put(epic.getId(), epic);
         return epic;
     }
 
     @Override
     public SubTask create(SubTask subTask) {
-        subTask.setId(addId());
+        if(subTask.getId() < 0) {
+            subTask.setId(addId());
+        }
         subTasks.put(subTask.getId(), subTask);
         Epic epic = subTask.getEpicOfSubTask();
         epic.setSubTasks(subTask);
