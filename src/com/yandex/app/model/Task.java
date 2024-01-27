@@ -50,6 +50,10 @@ public class Task {
     public void setType(TypeTasks type){
         this.type = type;
     }
+    public  TypeTasks getType() {
+        return type;
+    }
+
 }
 
 

@@ -15,6 +15,7 @@ public class Main {
         //тестирование кода
         TaskManager manager = Managers.getDefault();
 
+
         Task task1 = manager.create(new Task("Купить молоко",
                 "Нужно дойти до ближайшего магазина с продуктами и купить молоко"));
         Task task2 = manager.create(new Task("Купить телевизор",
