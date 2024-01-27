@@ -79,7 +79,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return fileBackedTasksManager;
     }
 
-    static String historyToString(HistoryManager manager) {
+   private static String historyToString(HistoryManager manager) {
         List<Task> tasks = manager.getHistory();
         StringBuilder taskString = new StringBuilder();
         taskString.append("\n");
@@ -91,7 +91,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return taskString.toString();
     }
 
-    static List<Integer> historyFromString(String value) {
+    private static List<Integer> historyFromString(String value) {
         String[] arrayHistory = parsingFile(value).split("\n");
         String stringOfHistory = arrayHistory[arrayHistory.length - 1];
         String[] lineHistory = stringOfHistory.split(",");
@@ -144,7 +144,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return null;
     }
 
-    void save() {
+    private void save() {
         try {
             Writer fileWriter = new FileWriter(fileSave);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
