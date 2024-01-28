@@ -15,11 +15,12 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        if (browsingHistory.get(task.getId()) == null) {
-            browsingHistory.put(task.getId(), linkLast(task));
+        int taskId = task.getId();
+        if (browsingHistory.get(taskId) == null) {
+            browsingHistory.put(taskId, linkLast(task));
         } else {
-            removeNode(browsingHistory.get(task.getId()));
-            browsingHistory.put(task.getId(), linkLast(task));
+            removeNode(browsingHistory.get(taskId));
+            browsingHistory.put(taskId, linkLast(task));
         }
 
 

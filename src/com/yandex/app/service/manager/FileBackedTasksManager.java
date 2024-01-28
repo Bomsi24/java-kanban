@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager {
+public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private final String fileSave;
 
@@ -19,48 +19,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
 
-    public static void main(String[] args) {
-
-        String fileSaveHistory = "save.csv";
-
-        FileBackedTasksManager backedTasksManager = new FileBackedTasksManager(fileSaveHistory);
-
-        Task task1 = backedTasksManager.create(new Task("Купить молоко",
-                "Нужно дойти до ближайшего магазина с продуктами и купить молоко"));
-        Task task2 = backedTasksManager.create(new Task("Купить телевизор",
-                "Нужно через сайт Ozon заказать телевизор"));
-        Epic epic1 = backedTasksManager.create(new Epic("Строительство дома",
-                "нужно подготовиться к строительству дома "));
-        SubTask subTask1 = backedTasksManager.create(new SubTask("Заказ материалов",
-                "Нужно на сайте Леруа мерлен заказать материалы",
-                epic1));
-        SubTask subTask2 = backedTasksManager.create(new SubTask("Найм строителей",
-                "Нужно на сайте Ovito найти строителей",
-                epic1));
-        SubTask subTask3 = backedTasksManager.create(new SubTask("Выбор места для отпуска",
-                "Нужно в турфирме Манго выбрать в какую страну лететь отдыхать ",
-                epic1));
-        Epic epic2 = backedTasksManager.create(new Epic("Отпуск", "Подготовиться к отпуску"));
-
-
-        backedTasksManager.getTask(task1.getId());
-        backedTasksManager.getEpic(epic1.getId());
-        backedTasksManager.getSubTask(subTask1.getId());
-        backedTasksManager.getSubTask(subTask1.getId());
-        backedTasksManager.getTask(task1.getId());
-        subTask1.setStatus(Statuses.DONE);
-        backedTasksManager.update(subTask1);
-        task1.setStatus(Statuses.IN_PROGRESS);
-        backedTasksManager.update(task1);
-        System.out.println(backedTasksManager.getHistory());
-
-        FileBackedTasksManager newBackedTasksManager = FileBackedTasksManager.loadFromFile(fileSaveHistory);
-        System.out.println(newBackedTasksManager.getHistory());
-    }
-
-    static FileBackedTasksManager loadFromFile(String file) {
+    public static FileBackedTasksManager loadFromFile(String file) {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
         String taskString = parsingFile(file);
+        if (taskString == null) {
+            return fileBackedTasksManager;
+        }
         String[] lineTask = taskString.split("\n");
         List<Integer> idTask = historyFromString(file);
 
@@ -69,9 +33,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 break;
             }
             Task task = fileBackedTasksManager.fromString(lineTask[i]);
-            for (Integer id : idTask) {
-                if (id == task.getId()) {
-                    fileBackedTasksManager.historyManager.add(task);
+            if (task != null) {
+                for (Integer id : idTask) {
+                    if (task.getId() == id) {
+                        fileBackedTasksManager.historyManager.add(task);
+                    }
                 }
             }
         }
@@ -79,7 +45,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return fileBackedTasksManager;
     }
 
-   private static String historyToString(HistoryManager manager) {
+    private static String historyToString(HistoryManager manager) {
         List<Task> tasks = manager.getHistory();
         StringBuilder taskString = new StringBuilder();
         taskString.append("\n");
@@ -92,13 +58,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     private static List<Integer> historyFromString(String value) {
+        if (value == null) {
+            return new ArrayList<>();
+        }
         String[] arrayHistory = parsingFile(value).split("\n");
         String stringOfHistory = arrayHistory[arrayHistory.length - 1];
         String[] lineHistory = stringOfHistory.split(",");
         List<Integer> historyList = new ArrayList<>();
 
-        for (int i = 0; i < lineHistory.length; i++) {
-            historyList.add(Integer.parseInt(lineHistory[i]));
+        for (String line : lineHistory) {
+            historyList.add(Integer.parseInt(line));
         }
         return historyList;
     }
