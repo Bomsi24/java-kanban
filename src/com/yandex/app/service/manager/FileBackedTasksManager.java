@@ -7,6 +7,10 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +71,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         List<Integer> historyList = new ArrayList<>();
 
         for (String line : lineHistory) {
-            historyList.add(Integer.parseInt(line));
+            //  try {
+                historyList.add(Integer.parseInt(line));
+            //} catch (NumberFormatException e) {
+              //  break;
+           // }
         }
         return historyList;
     }
@@ -83,6 +91,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private Task fromString(String value) {
         String[] word = value.split(",");
+        //boolean isTime = false;
+        boolean isTime = Long.parseLong(word[5]) > 0;
+        String startTime = word[6];
+        long duration = Long.parseLong(word[5]);
 
         switch (TypeTasks.valueOf(word[1])) {
             case TASK:
@@ -90,6 +102,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 task.setId(Integer.parseInt(word[0]));
                 create(task);
                 task.setStatus(Statuses.valueOf(word[3]));
+                if (isTime) {
+                    task.createTime(duration,startTime);
+                }
                 update(task);
                 return task;
 
@@ -103,10 +118,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
             case SUB_TASK:
                 SubTask subTask = new SubTask(word[2], word[4],
-                        epics.get(Integer.parseInt(word[5])));
+                        epics.get(Integer.parseInt(word[7])));
                 subTask.setId(Integer.parseInt(word[0]));
                 create(subTask);
                 subTask.setStatus(Statuses.valueOf(word[3]));
+                if (isTime) {
+                    subTask.createTime(duration,startTime);
+                    //updateStatusEpic(epics.get(Integer.parseInt(word[7])));
+                }
                 update(subTask);
                 return subTask;
         }
@@ -117,7 +136,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         try {
             Writer fileWriter = new FileWriter(fileSave);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            String taskFields = "id,type,name,status,description,epic";
+            String taskFields = "id,type,name,status,description,duration,startTime,epic";
             bufferedWriter.write(taskFields);
 
             if (!tasks.isEmpty()) {
