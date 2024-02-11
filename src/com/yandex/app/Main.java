@@ -64,14 +64,14 @@ public class Main {
 
        //backedTasksManager.update(subTask2);
       // backedTasksManager.update(task1);
-        /*
+
        backedTasksManager.update(task2);
        backedTasksManager.update(subTask1);
        backedTasksManager.update(subTask1);
-       backedTasksManager.update(subTask2);
+       backedTasksManager.update(task1);
        backedTasksManager.update(subTask2);
 
-         */
+
         //System.out.println(epic1.getEndTime());
       // backedTasksManager.getAllTasks();
         //task1.setStatus(Statuses.IN_PROGRESS);
@@ -80,7 +80,7 @@ public class Main {
         //System.out.println(prioritizedTasks);
         //backedTasksManager.update(task1);
         //System.out.println(backedTasksManager.getHistory());
-       // System.out.println(backedTasksManager.getPrioritizedTasks());
+        System.out.println(backedTasksManager.getPrioritizedTasks());
 
         FileBackedTasksManager newBackedTasksManager = FileBackedTasksManager.loadFromFile(fileSaveHistory);
         //System.out.println(newBackedTasksManager.getHistory());

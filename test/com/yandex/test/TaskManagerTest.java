@@ -16,7 +16,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
 
     @Test
-    public void createTest() {
+    public void createTask() {
 
         final Task task1 = new Task("Купить молоко", "Сходить в магазин");
         final Task taskTest = manager.create(task1);
@@ -31,4 +31,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Assertions.assertEquals(taskTest, listTask.get(0), "Задача не совпадают");
 
     }
+
+    @Test
+    public void createEpic() {
+
+    }
+
 }

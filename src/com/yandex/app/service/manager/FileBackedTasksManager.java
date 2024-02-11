@@ -66,6 +66,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             return new ArrayList<>();
         }
         String[] arrayHistory = parsingFile(value).split("\n");
+        if (arrayHistory.length < 8) {
+            return new ArrayList<>();
+        }
         String stringOfHistory = arrayHistory[arrayHistory.length - 1];
         String[] lineHistory = stringOfHistory.split(",");
         List<Integer> historyList = new ArrayList<>();

@@ -16,20 +16,17 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, Task> tasks = new HashMap<>();
     protected final Map<Integer, Epic> epics = new HashMap<>();
     protected final Map<Integer, SubTask> subTasks = new HashMap<>();
-    StartTimeComparator comparator = new StartTimeComparator();
-    protected Set<Task> prioritizedTasks = new TreeSet<>(Comparator
-            .comparing(Task::getStartTime, Comparator.nullsLast(Comparator.naturalOrder()))
-            .thenComparing(Task::getId));
+    protected Set<Task> prioritizedTasks = new TreeSet<>(new StartTimeComparator());
 
     @Override
     public Task create(Task task) {
-            if (task.getId() < 0) {
-                task.setId(addId());
-            }
-            tasks.put(task.getId(), task);
-            prioritizedTasks.add(task);
+        if (task.getId() < 0) {
+            task.setId(addId());
+        }
+        tasks.put(task.getId(), task);
+        prioritizedTasks.add(task);
 
-            return task;
+        return task;
 
     }
 
@@ -44,15 +41,16 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public SubTask create(SubTask subTask) {
-            if (subTask.getId() < 0) {
-                subTask.setId(addId());
-            }
-            subTasks.put(subTask.getId(), subTask);
-            Epic epic = subTask.getEpicOfSubTask();
-            epic.setSubTasks(subTask);
-            updateStatusEpic(epic);
-            prioritizedTasks.add(subTask);
-            return subTask;
+        if (subTask.getId() < 0) {
+            subTask.setId(addId());
+        }
+        subTasks.put(subTask.getId(), subTask);
+        prioritizedTasks.add(subTask);
+        Epic epic = subTask.getEpicOfSubTask();
+        epic.setSubTasks(subTask);
+        updateStatusEpic(epic);
+
+        return subTask;
 
 
     }
@@ -183,7 +181,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void update(SubTask subTask) {
-        if(taskValidation(subTask)) {
+        if (taskValidation(subTask)) {
             subTasks.put(subTask.getId(), subTask);
             Epic epic = subTask.getEpicOfSubTask();
             epic.setSubTasks(subTask);
