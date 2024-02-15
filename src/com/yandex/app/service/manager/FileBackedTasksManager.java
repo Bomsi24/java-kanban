@@ -74,11 +74,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         List<Integer> historyList = new ArrayList<>();
 
         for (String line : lineHistory) {
-            //  try {
                 historyList.add(Integer.parseInt(line));
-            //} catch (NumberFormatException e) {
-              //  break;
-           // }
         }
         return historyList;
     }
@@ -101,7 +97,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         switch (TypeTasks.valueOf(word[1])) {
             case TASK:
-                Task task = new Task(word[2], word[4]);
+                Task task = new Task(word[2], word[4],Long.parseLong(word[5]),word[6]);
                 task.setId(Integer.parseInt(word[0]));
                 create(task);
                 task.setStatus(Statuses.valueOf(word[3]));
@@ -112,7 +108,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 return task;
 
             case EPIC:
-                Epic epic = new Epic(word[2], word[4]);
+                Epic epic = new Epic(word[2], word[4],Long.parseLong(word[5]),word[6]);
                 epic.setId(Integer.parseInt(word[0]));
                 create(epic);
                 epic.setStatus(Statuses.valueOf(word[3]));
@@ -120,8 +116,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 return epic;
 
             case SUB_TASK:
-                SubTask subTask = new SubTask(word[2], word[4],
-                        epics.get(Integer.parseInt(word[7])));
+                SubTask subTask = new SubTask(word[2], word[4], epics.get(Integer.parseInt(word[7])),
+                        Long.parseLong(word[5]),word[6]);
                 subTask.setId(Integer.parseInt(word[0]));
                 create(subTask);
                 subTask.setStatus(Statuses.valueOf(word[3]));

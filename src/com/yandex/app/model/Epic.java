@@ -8,15 +8,13 @@ public class Epic extends Task {
     private final List<SubTask> subTasks = new ArrayList<>();
     private LocalDateTime endTime;
 
-    public Epic(String name, String description) {
-        super(name, description);
+    public Epic(String name, String description,long duration,String time) {
+        super(name, description,duration,time);
         this.type = TypeTasks.EPIC;
     }
 
     public void setSubTasks(SubTask subTask) {
-        if (!subTasks.contains(subTask)) {
             subTasks.add(subTask);
-        }
     }
 
     public List<SubTask> getSubTasks() {

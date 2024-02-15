@@ -15,7 +15,7 @@ public class Task {
     protected String name;
     protected Statuses status;
     protected String description;
-    protected long duration = -1;
+    protected long duration = 0;
     protected LocalDateTime startTime;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yy");
@@ -27,7 +27,7 @@ public class Task {
                 name + ',' +
                 status + ',' +
                 description;
-        if (duration < 0) {
+        if (duration == 0) {
             return toString + ',' + duration + ',' + "null";
 
         } else {
@@ -52,20 +52,29 @@ public class Task {
         return Objects.hash(id, type, name, status, description, duration, startTime, formatter);
     }
 
+
     public Task(String name, String description, long duration, String startTime) {
         this.name = name;
         this.description = description;
         this.status = Statuses.NEW;
         this.type = TypeTasks.TASK;
-        createTime(duration, startTime);
+        if(startTime != null && !(startTime.equals("null"))) {
+            createTime(duration, startTime);
+        }
     }
 
+
+/*
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Statuses.NEW;
         this.type = TypeTasks.TASK;
     }
+
+
+
+ */
 
     public String getName() {
         return name;
@@ -112,11 +121,17 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plusMinutes(duration);
+        if(startTime != null) {
+            return startTime.plusMinutes(duration);
+        }
+        return null;
     }
 
     public String getEndTimeToString() {
-        return startTime.plusMinutes(duration).format(formatter);
+        if(startTime != null) {
+            return startTime.plusMinutes(duration).format(formatter);
+        }
+        return null;
     }
 
     public void createTime(long duration, String startTime) {

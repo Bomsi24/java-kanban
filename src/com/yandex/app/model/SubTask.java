@@ -24,13 +24,8 @@ public class SubTask extends Task {
                 epic.getId();
     }
 
-    public SubTask (String name, String description, Epic epic, long duration, String startTime) {
-        super(name,description,duration,startTime);
-        this.epic = epic;
-        this.type = TypeTasks.SUB_TASK;
-    }
-    public SubTask(String name, String description, Epic epic) {
-        super(name, description);
+    public SubTask(String name, String description, Epic epic, long duration,String time) {
+        super(name, description,duration,time);
         this.epic = epic;
         this.type = TypeTasks.SUB_TASK;
     }
