@@ -22,8 +22,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             removeNode(browsingHistory.get(taskId));
             browsingHistory.put(taskId, linkLast(task));
         }
-
-
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.yandex.test;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Statuses;
 import com.yandex.app.model.SubTask;
+import com.yandex.app.model.Task;
 import com.yandex.app.service.manager.Managers;
 import com.yandex.app.service.manager.TaskManager;
 import org.junit.jupiter.api.Assertions;
@@ -16,21 +17,22 @@ import java.time.LocalDateTime;
 class EpicTest {
 
     TaskManager manager;
+
      Epic epic;
      SubTask subTask1;
      SubTask subTask2;
 
     @BeforeEach
     public void beforeEach() {
-        epic = new Epic("Эпик задача", "Описание");
+        epic = new Epic("Эпик задача", "Описание",0,null);
         manager = Managers.getDefault();
     }
 
     @ParameterizedTest
     @CsvFileSource(resources = "/saveClear.csv")
     public void testOfEpicStatus( String status1, String status2, String statusEpic) {
-        subTask1 = new SubTask("Первая подзадача", "Описание", epic);
-        subTask2 = new SubTask("Вторая подзадача", "Описание", epic);
+        subTask1 = new SubTask("Первая подзадача", "Описание", epic,0,null);
+        subTask2 = new SubTask("Вторая подзадача", "Описание", epic,0,null);
 
         subTask1.setStatus(Statuses.valueOf(status1));
         subTask2.setStatus(Statuses.valueOf(status2));
@@ -59,7 +61,7 @@ class EpicTest {
 
     @Test
     public void epicTimeWithoutSubtasks() {
-        Epic epic = new Epic("Эпи1","Описание");
+        epic = new Epic("Эпи1","Описание",0,null);
         LocalDateTime timeEpic = epic.getEndTime();
 
         Assertions.assertNull(timeEpic,"Неправильное время");
@@ -68,9 +70,9 @@ class EpicTest {
 
     @Test
     public void epicTimeWithSubtasks() {
-        Epic epic = new Epic("Эпи1","Описание");
-        SubTask subTask1 = new SubTask("Саб Таск1","Описание",epic);
-        SubTask subTask2 = new SubTask("Саб таск2","Описание",epic);
+        epic = new Epic("Эпи1","Описание",0,null);
+        subTask1 = new SubTask("Саб Таск1","Описание",epic,0,null);
+        subTask2 = new SubTask("Саб таск2","Описание",epic,0,null);
         subTask1.createTime(20, "08:00 06.01.24");
         subTask2.createTime(30, "07:55 06.01.24");
         manager.update(subTask1);

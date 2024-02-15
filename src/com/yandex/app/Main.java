@@ -37,54 +37,6 @@ public class Main {
         ));
 
 
-
-                /*
-        Epic epic2 = backedTasksManager.create(new Epic("Отпуск", "Подготовиться к отпуску"));
-        SubTask subTask3 = backedTasksManager.create(new SubTask("Выбор места для отпуска",
-                "Нужно в турфирме Манго выбрать в какую страну лететь отдыхать ",
-                epic2));
-
-f
-
-         */
-
-
-        //2024,10,1,12,12
-        //"14:00 02.01.24"
-        // backedTasksManager.getTask(task1.getId());
-        //task1.createTime(100, "14:00 02.01.24");
-        // backedTasksManager.update(task1);
-        // backedTasksManager.getEpic(epic1.getId());
-        //backedTasksManager.getSubTask(subTask1.getId());
-        //backedTasksManager.getSubTask(subTask1.getId());
-        //backedTasksManager.getTask(task1.getId());
-        //subTask1.setStatus(Statuses.DONE);
-
-        // subTask1.createTime(50, "10:00 06.01.24");
-        //backedTasksManager.update(subTask1);
-
-        // task1.createTime(20, "07:55 06.01.24");
-        // backedTasksManager.update(task1);
-        // task2.createTime(80, "08:00 06.01.24");
-        //backedTasksManager.update(task2);
-
-
-        //backedTasksManager.update(subTask1);
-        //backedTasksManager.update(subTask2);
-
-
-        //System.out.println(epic1.getEndTime());
-        // backedTasksManager.getAllTasks();
-        //task1.setStatus(Statuses.IN_PROGRESS);
-        //backedTasksManager.update(task1);
-
-        //System.out.println(prioritizedTasks);
-        //backedTasksManager.update(task1);
-        //System.out.println(backedTasksManager.getHistory());
-
-        //for (SubTask subTask: epic1.getSubTasks()) {
-        //  System.out.println(subTask);
-        //}
         System.out.println(backedTasksManager.getPrioritizedTasks());
 
         FileBackedTasksManager newBackedTasksManager = FileBackedTasksManager.loadFromFile(fileSaveHistory);

@@ -64,18 +64,6 @@ public class Task {
     }
 
 
-/*
-    public Task(String name, String description) {
-        this.name = name;
-        this.description = description;
-        this.status = Statuses.NEW;
-        this.type = TypeTasks.TASK;
-    }
-
-
-
- */
-
     public String getName() {
         return name;
     }
