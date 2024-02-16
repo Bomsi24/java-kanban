@@ -28,7 +28,7 @@ public class InMemoryTaskManager implements TaskManager {
             prioritizedTasks.add(task);
             return task;
         }
-        System.out.println("Задача " + task.getName() + " не создана");
+        System.out.println("У задачи " + task.getName() + " не с");
         return null;
     }
 

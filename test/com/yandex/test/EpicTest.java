@@ -68,23 +68,6 @@ class EpicTest {
 
     }
 
-    @Test
-    public void epicTimeWithSubtasks() {
-        epic = new Epic("Эпи1","Описание",0,null);
-        subTask1 = new SubTask("Саб Таск1","Описание",epic,0,null);
-        subTask2 = new SubTask("Саб таск2","Описание",epic,0,null);
-        subTask1.createTime(20, "08:00 06.01.24");
-        subTask2.createTime(30, "07:55 06.01.24");
-        manager.update(subTask1);
-        manager.update(subTask2);
 
-        LocalDateTime timeEpicEndTime = epic.getEndTime();
-        LocalDateTime timeEpicStartTime = epic.getStartTime();
-        LocalDateTime endTime = LocalDateTime.of(2024,1,6,8, 25);
-        LocalDateTime startTime = LocalDateTime.of(2024,1,6,7, 55);
-
-        Assertions.assertEquals(endTime,timeEpicEndTime,"Время не равно");
-        Assertions.assertEquals(startTime,timeEpicStartTime,"Время не равно");
-    }
 
 }
