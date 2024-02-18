@@ -1,4 +1,4 @@
-package com.yandex.test;
+package com.yandex.test.service.manager;
 
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.StartTimeComparator;
@@ -7,10 +7,13 @@ import com.yandex.app.model.Task;
 import com.yandex.app.service.history.HistoryManager;
 import com.yandex.app.service.manager.Managers;
 import com.yandex.app.service.manager.TaskManager;
+import com.yandex.test.model.UtilityClassForTests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -20,17 +23,17 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     protected T manager;
 
-    Task task;
-    Task task2;
-    Epic epic;
-    Epic epic2;
-    SubTask subTask1;
-    SubTask subTask2;
+    protected Task task;
+    protected Task task2;
+    protected Epic epic;
+    protected Epic epic2;
+    protected SubTask subTask1;
+    protected SubTask subTask2;
 
     @Test
     public void createTask() {
 
-        task = new Task("Купить молоко", "Сходить в магазин", 0, null);
+        final Task task = UtilityClassForTests.task1();
         final Task taskTest = manager.create(task);
 
         assertNotNull(taskTest, "Задача не найдена");
@@ -45,8 +48,34 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
+    public void testTimeOfTask() {
+        task = UtilityClassForTests.task1();
+        final LocalDateTime timeStartIsEmpty = task.getStartTime();
+        final LocalDateTime timeEndIsEmpty = task.getEndTime();
+        final long durationIsEmpty = task.getDuration();
+
+        assertNull(timeStartIsEmpty,"Время старта не пусто");
+        assertNull(timeEndIsEmpty,"Время конца не пусто");
+        assertEquals(0, durationIsEmpty,"Продолжительность не нулевая");
+
+        task.createTime(20, "10:00 06.01.24");
+
+        final LocalDateTime timeStartNotEmpty = LocalDateTime.of(2024, 1, 6, 10, 00);
+        final LocalDateTime timeEndNotEmpty = LocalDateTime.of(2024, 1, 6, 10, 20);
+        final long durationNotEmpty = 20;
+
+        final LocalDateTime timeStartTask = task.getStartTime();
+        final LocalDateTime timeEndTask = task.getEndTime();
+        final long durationTask = task.getDuration();
+
+        assertEquals(timeStartTask,timeStartNotEmpty,"Время старта не совпадает");
+        assertEquals(timeEndTask,timeEndNotEmpty,"Время конца не совпадает");
+        assertEquals(durationTask,durationNotEmpty,"Продолжительность не совпадает");
+    }
+
+    @Test
     public void createEpic() {
-        epic = new Epic("Купить молоко", "Сходить в магазин", 0, null);
+        epic = UtilityClassForTests.epic1();
         epic2 = manager.create(epic);
 
         assertNotNull(epic2, "Эпик не найден");
@@ -61,10 +90,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void createSub() {
-        epic = new Epic("Имя эпика", "Описание эпика", 0, null);
+        epic = UtilityClassForTests.epic1();
         assertNotNull(epic, "Пустой эпик");
 
-        subTask1 = new SubTask("СабТаск1", "Описание", epic, 0, null);
+        subTask1 = UtilityClassForTests.subTask1(epic);
         subTask2 = manager.create(subTask1);
 
         assertNotNull(subTask2, "СабТаск не найден");
@@ -78,9 +107,36 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
+    public void testTimeOfSubTask() {
+        epic = UtilityClassForTests.epic1();
+        subTask1 = UtilityClassForTests.subTask1(epic);
+        final LocalDateTime timeStartIsEmpty = subTask1.getStartTime();
+        final LocalDateTime timeEndIsEmpty = subTask1.getEndTime();
+        final long durationIsEmpty = subTask1.getDuration();
+
+        assertNull(timeStartIsEmpty,"Время старта не пусто");
+        assertNull(timeEndIsEmpty,"Время конца не пусто");
+        assertEquals(0, durationIsEmpty,"Продолжительность не нулевая");
+
+        subTask1.createTime(20, "10:00 06.01.24");
+
+        final LocalDateTime timeStartNotEmpty = LocalDateTime.of(2024, 1, 6, 10, 00);
+        final LocalDateTime timeEndNotEmpty = LocalDateTime.of(2024, 1, 6, 10, 20);
+        final long durationNotEmpty = 20;
+
+        final LocalDateTime timeStartTask = subTask1.getStartTime();
+        final LocalDateTime timeEndTask = subTask1.getEndTime();
+        final long durationTask = subTask1.getDuration();
+
+        assertEquals(timeStartTask,timeStartNotEmpty,"Время старта не совпадает");
+        assertEquals(timeEndTask,timeEndNotEmpty,"Время конца не совпадает");
+        assertEquals(durationTask,durationNotEmpty,"Продолжительность не совпадает");
+    }
+
+    @Test
     public void getAllTasks() {
-        task = manager.create(new Task("Задача1", "Описание", 0, null));
-        task2 = manager.create(new Task("Задача2", "Описание", 0, null));
+        task = manager.create(UtilityClassForTests.task1());
+        task2 = manager.create(UtilityClassForTests.task2());
 
 
         final List<Task> tasks = manager.getAllTasks();
@@ -91,8 +147,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void getAllEpics() {
-        epic = manager.create(new Epic("Задача1", "Описание",0,null));
-        epic2 = manager.create(new Epic("Задача2", "Описание",0,null));
+        epic = manager.create(UtilityClassForTests.epic1());
+        epic2 = manager.create(UtilityClassForTests.epic2());
 
         final List<Epic> epics = manager.getAllEpics();
 
@@ -102,11 +158,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void getAllSubTasks() {
-        epic = manager.create(new Epic("Имя эпика", "Описание эпика", 0, null));
+        epic = manager.create(UtilityClassForTests.epic1());
         assertNotNull(epic, "Пустой эпик");
 
-        subTask1 = manager.create(new SubTask("Задача1", "Описание", epic, 0, null));
-        subTask2 = manager.create(new SubTask("Задача2", "Описание", epic, 0, null));
+        subTask1 = manager.create(UtilityClassForTests.subTask1(epic));
+        subTask2 = manager.create(UtilityClassForTests.subTask2(epic));
 
 
         final List<SubTask> subTasks = manager.getAllSubTasks();
@@ -118,8 +174,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void deleteTasks() {
 
-        task = manager.create(new Task("Задача1", "Описание", 0, null));
-        task2 = manager.create(new Task("Задача2", "Описание", 0, null));
+        task = manager.create(UtilityClassForTests.task1());
+        task2 = manager.create(UtilityClassForTests.task2());
 
         final List<Task> sortedTasks = manager.getPrioritizedTasks();
         final List<Task> tasks = manager.getAllTasks();
@@ -147,9 +203,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void deleteEpics() {
-        epic = manager.create(new Epic("Эпик1", "Описание", 0, null));
-        subTask1 = manager.create(new SubTask("СабТаск1", "Описание", epic, 0, null));
-        subTask2 = manager.create(new SubTask("СабТаск2", "Описание", epic, 0, null));
+        epic = manager.create(UtilityClassForTests.epic1());
+        subTask1 = manager.create(UtilityClassForTests.subTask1(epic));
+        subTask2 = manager.create(UtilityClassForTests.subTask2(epic));
 
         final List<Epic> epics = manager.getAllEpics();
         final List<SubTask> subTasks = manager.getAllSubTasks();
@@ -184,9 +240,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void deleteSubTasks() {
-        epic = manager.create(new Epic("Эпик1", "Описание",0,null));
-        subTask1 = manager.create(new SubTask("СабТаск1", "Описание", epic,0,null));
-        subTask2 = manager.create(new SubTask("СабТаск2", "Описание", epic,0,null));
+        epic = manager.create(UtilityClassForTests.epic1());
+        subTask1 = manager.create(UtilityClassForTests.subTask1(epic));
+        subTask2 = manager.create(UtilityClassForTests.subTask2(epic));
 
         final List<SubTask> subTasks = manager.getAllSubTasks();
         final List<Task> sortedTasks = manager.getPrioritizedTasks();
@@ -219,8 +275,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void getTask() {
-        task = manager.create(new Task("Задача1", "Описание",0,null));
-        task2 = new Task("Задача2", "Описание",0,null);
+        task = manager.create(UtilityClassForTests.task2());
+        task2 = UtilityClassForTests.task2();
         final List<Task> history = manager.getHistory();
 
         assertEquals(0, history.size(), "История не пуста");
@@ -239,8 +295,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void getEpic() {
-        epic = manager.create(new Epic("Эпик1", "Описание",0,null));
-        epic2 = new Epic("Эпик2", "Описание",0,null);
+        epic = manager.create(UtilityClassForTests.epic1());
+        epic2 = UtilityClassForTests.epic2();
         final List<Task> history = manager.getHistory();
 
         assertEquals(0, history.size(), "История не пуста");
@@ -259,9 +315,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void getSubTask() {
-        epic = manager.create(new Epic("Эпик1", "Описание",0,null));
-        subTask1 = manager.create(new SubTask("Саб таск1", "Описание", epic,0,null));
-        subTask2 = new SubTask("Саб таск2", "Описание", epic,0,null);
+        epic = manager.create(UtilityClassForTests.epic1());
+        subTask1 = manager.create(UtilityClassForTests.subTask1(epic));
+        subTask2 = UtilityClassForTests.subTask2(epic);
         final List<Task> history = manager.getHistory();
 
         assertEquals(0, history.size(), "История не пуста");
@@ -279,8 +335,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void deleteTaskInId() {
-        task = manager.create(new Task("Задача1", "Описание",0,null));
-        task2 = manager.create(new Task("Задача2", "Описание",0,null));
+        task = manager.create(UtilityClassForTests.task1());
+        task2 = manager.create(UtilityClassForTests.task2());
         final List<Task> tasks = manager.getAllTasks();
         final List<Task> sortedTasks = manager.getPrioritizedTasks();
 
@@ -311,9 +367,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void deleteEpicInId() {
-        epic = manager.create(new Epic("Эпик1", "Описание", 0, null));
-        subTask1 = manager.create(new SubTask("СабТаск1", "Описание", epic,0,null));
-        subTask2 = manager.create(new SubTask("СабТаск2", "Описание", epic,0,null));
+        epic = manager.create(UtilityClassForTests.epic1());
+        subTask1 = manager.create(UtilityClassForTests.subTask1(epic));
+        subTask2 = manager.create(UtilityClassForTests.subTask2(epic));
         final List<Epic> epics = manager.getAllEpics();
         final List<SubTask> subTasks = manager.getAllSubTasks();
         final List<Task> sortedTasks = manager.getPrioritizedTasks();
@@ -353,8 +409,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void deleteSubTaskInId() {
-        epic = manager.create(new Epic("Эпик1", "Описание",0,null));
-        subTask1 = manager.create(new SubTask("СабТаск1", "Описание", epic,0,null));
+        epic = manager.create(UtilityClassForTests.epic1());
+        subTask1 = manager.create(UtilityClassForTests.subTask1(epic));
         final List<Epic> epics = manager.getAllEpics();
         final List<SubTask> subTasks = manager.getAllSubTasks();
         final List<Task> sortedTasks = manager.getPrioritizedTasks();
@@ -391,7 +447,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void updateTask() {
-        task = new Task("Задача1", "Описание",0,null);
+        task = UtilityClassForTests.task1();
         final List<Task> tasks = manager.getAllTasks();
         final List<Task> sortedTasks = manager.getPrioritizedTasks();
 
@@ -410,7 +466,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void updateEpic() {
-        epic = new Epic("Эпик1", "Описание",0,null);
+        epic = UtilityClassForTests.epic1();
         final List<Epic> epics = manager.getAllEpics();
 
         assertEquals(0, epics.size(), "Список Эпиков не пуст");
@@ -424,8 +480,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void updateSubTask() {
-        epic = new Epic("Эпик1", "Описание",0,null);
-        subTask1 = new SubTask("СабТаск1", "Описание", epic,0,null);
+        epic = UtilityClassForTests.epic1();
+        subTask1 = UtilityClassForTests.subTask1(epic);
         final List<SubTask> subTasks = manager.getAllSubTasks();
         final List<Task> sortedTasks = manager.getPrioritizedTasks();
 
@@ -444,7 +500,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void getHistoryTest() {
-        task = manager.create(new Task("Задача1", "Описание",0,null));
+        task = manager.create(UtilityClassForTests.task1());
 
         manager.getTask(task.getId());
 
@@ -456,7 +512,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void getPrioritizedTasksTest() {
-        task = manager.create(new Task("Задача1", "Описание",0,null));
+        task = manager.create(UtilityClassForTests.task1());
 
         List<Task> prioritizedTasks = manager.getPrioritizedTasks();
 

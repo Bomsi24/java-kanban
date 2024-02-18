@@ -52,7 +52,6 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = subTask.getEpicOfSubTask();
             epic.setSubTasks(subTask);
             updateStatusEpic(epic);
-            taskValidation(subTask);
             updateTimesEpic(epic);
             prioritizedTasks.add(subTask);
             return subTask;
@@ -60,13 +59,11 @@ public class InMemoryTaskManager implements TaskManager {
         System.out.println("Подзадача " + subTask.getName() + " не создана");
 
         return null;
-
     }
 
     @Override
     public List<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
-
     }
 
     @Override
@@ -149,7 +146,6 @@ public class InMemoryTaskManager implements TaskManager {
             prioritizedTasks.remove(tasks.get(id));
             tasks.remove(id);
         }
-
     }
 
     @Override
@@ -163,7 +159,6 @@ public class InMemoryTaskManager implements TaskManager {
             epics.remove(id);
             historyManager.remove(id);
         }
-
     }
 
     @Override
@@ -191,12 +186,10 @@ public class InMemoryTaskManager implements TaskManager {
         if (taskValidation(subTask)) {
             subTasks.put(subTask.getId(), subTask);
             Epic epic = subTask.getEpicOfSubTask();
-            updateTimesEpic(epic);
             epic.setSubTasks(subTask);
             updateStatusEpic(epic);
-            taskValidation(subTask);
             prioritizedTasks.add(subTask);
-
+            updateTimesEpic(epic);
         }
     }
 
@@ -272,8 +265,6 @@ public class InMemoryTaskManager implements TaskManager {
             epic.createTime(duration, startTimeString);
             epic.setEndTime(endTime);
         }
-
-
     }
 
     @Override
@@ -285,8 +276,8 @@ public class InMemoryTaskManager implements TaskManager {
         return getPrioritizedTasks().stream()
                 .filter(t -> t.getStartTime() != null)
                 .filter(t -> t.getStartTime() != task.getStartTime())
-                .noneMatch(t -> t.getStartTime().isBefore(task.getEndTime()) &&
-                        task.getEndTime().isAfter(task.getStartTime()));
+                .noneMatch(t -> (t.getStartTime().isBefore(task.getEndTime()) &&
+                        t.getEndTime().isAfter(task.getStartTime())));
     }
 
     private int addId() {

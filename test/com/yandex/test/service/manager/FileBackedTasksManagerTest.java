@@ -1,4 +1,4 @@
-package com.yandex.test;
+package com.yandex.test.service.manager;
 
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Task;
@@ -24,20 +24,20 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
     public void loadFromFileClearTask() {
         final FileBackedTasksManager newBackedTasksManagerClear = FileBackedTasksManager.loadFromFile(fileSaveClear);
         final List<Task> tasksClear = newBackedTasksManagerClear.getAllTasks();
-        Assertions.assertEquals(0,tasksClear.size(),"Список задач не пуст");
-
+        Assertions.assertEquals(0, tasksClear.size(), "Список задач не пуст");
     }
 
     @Test
     public void loadFromFileEpicWithoutSubtasks() {
-        Epic epic = manager.create(new Epic("Эпик1","Описание",0,null));
+        Epic epic = manager.create(new Epic("Эпик1", "Описание", 0, null));
         final FileBackedTasksManager newBackedTasksManagerClear = FileBackedTasksManager.loadFromFile(fileSaveHistory);
         final List<Epic> epics = newBackedTasksManagerClear.getAllEpics();
-        Assertions.assertEquals(1,epics.size(),"Список задач не пуст");
+        Assertions.assertEquals(1, epics.size(), "Список задач не пуст");
     }
+
     @Test
     public void loadFromFileTest() {
-        final Task task1 = manager.create(new Task("Купить молоко", "Сходить в магазин",0,null));
+        final Task task1 = manager.create(new Task("Купить молоко", "Сходить в магазин", 10, "07:00 06.01.24"));
 
         manager.getTask(task1.getId());
 
@@ -45,7 +45,7 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
 
         final Task task2 = newBackedTasksManager.getTask(task1.getId());
 
-        Assertions.assertEquals(task1, task2, "Задачи не равны");
+        Assertions.assertEquals(task1.toString(), task2.toString(), "Задачи не равны");
 
     }
 }
