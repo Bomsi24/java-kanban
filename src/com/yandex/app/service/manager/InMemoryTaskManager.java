@@ -194,6 +194,7 @@ public class InMemoryTaskManager implements TaskManager {
             updateTimesEpic(epic);
             return subTask;
         }
+        System.out.println("Подзадача " + subTask.getName() + " не обновлена");
         return null;
     }
 

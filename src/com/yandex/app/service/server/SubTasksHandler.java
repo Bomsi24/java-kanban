@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.regex.Pattern;
 
+
 public class SubTasksHandler implements HttpHandler {
     private final TaskManager manager;
     private final Gson gson;
@@ -62,13 +63,12 @@ public class SubTasksHandler implements HttpHandler {
                 writeResponse(exchange, "Некорректный id =  " + pathId, 406);
             }
         }
-
-
     }
 
     private void subTasksPost(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
         if (Pattern.matches("^/subtasks$", path)) {
+
             String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
             SubTask subTaskRequest = gson.fromJson(body, SubTask.class);
             SubTask subTaskCreate = manager.create(subTaskRequest);
@@ -77,7 +77,7 @@ public class SubTasksHandler implements HttpHandler {
                 exchange.sendResponseHeaders(201, 0);
                 exchange.close();
 
-            } else {//Код ошибки\
+            } else {
                 writeResponse(exchange, "Подзадача пересекается с существующими", 406);
             }
         } else if (Pattern.matches("^/subtasks/\\d+$", path)) {
@@ -100,7 +100,6 @@ public class SubTasksHandler implements HttpHandler {
                 writeResponse(exchange, "Некорректный id =  " + pathId, 406);
             }
         }
-
     }
 
     private void subTasksDelete(HttpExchange exchange) throws IOException {

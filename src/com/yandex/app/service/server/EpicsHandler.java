@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.yandex.app.model.Epic;
 import com.yandex.app.service.manager.Managers;
+
 import com.yandex.app.service.manager.TaskManager;
 
 import java.io.IOException;
@@ -62,6 +63,8 @@ public class EpicsHandler implements HttpHandler {
 
             } else {
                 writeResponse(exchange, "Некорректный id =  " + pathId, 406);
+
+         
             }
         }
     }
@@ -91,9 +94,10 @@ public class EpicsHandler implements HttpHandler {
                 exchange.sendResponseHeaders(201, 0);
                 exchange.close();
 
-
             } else {
                 writeResponse(exchange, "Некорректный id =  " + pathId, 406);
+
+          
             }
         }
     }
@@ -106,6 +110,7 @@ public class EpicsHandler implements HttpHandler {
             System.out.println("Все эпики удалены");
             exchange.sendResponseHeaders(201, 0);
             exchange.close();
+         
         } else if (Pattern.matches("^/epics/\\d+$", path)) { //Если есть id возвращаем задачу по id
             String pathId = path.replaceFirst("/epics/", "");// должен вернуть id
             int id = parsePathId(pathId);
@@ -117,6 +122,8 @@ public class EpicsHandler implements HttpHandler {
 
             } else {
                 writeResponse(exchange, "Некорректный id =  " + pathId, 406);
+
+       
             }
         }
     }
