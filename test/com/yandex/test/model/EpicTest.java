@@ -3,6 +3,7 @@ package com.yandex.test.model;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Statuses;
 import com.yandex.app.model.SubTask;
+import com.yandex.app.service.manager.InMemoryTaskManager;
 import com.yandex.app.service.manager.Managers;
 import com.yandex.app.service.manager.TaskManager;
 import org.junit.jupiter.api.Assertions;
@@ -24,7 +25,7 @@ class EpicTest {
     @BeforeEach
     public void beforeEach() {
         epic = UtilityClassForTests.epic1();
-        manager = Managers.getDefault();
+        manager = new InMemoryTaskManager();
         subTask1 = UtilityClassForTests.subTask1(epic);
         subTask2 = UtilityClassForTests.subTask2(epic);
     }
@@ -66,9 +67,9 @@ class EpicTest {
 
     @Test
     public void epicTimeBasedOnSubtasks() {
-        subTask1.createTime(20, "10:00 06.01.24");
+        subTask1.createTime(20, LocalDateTime.of(2024, 1, 6, 10, 00));
         manager.update(subTask1);
-        subTask2.createTime(30, "11:00 06.01.24");
+        subTask2.createTime(30, LocalDateTime.of(2024, 1, 6, 11, 30));
         manager.update(subTask2);
 
         LocalDateTime timeTestStart = LocalDateTime.of(2024, 1, 6, 10, 00);

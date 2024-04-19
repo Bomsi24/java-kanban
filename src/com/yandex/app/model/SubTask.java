@@ -1,9 +1,11 @@
 package com.yandex.app.model;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class SubTask extends Task {
-    private final Epic epic;
+
+    private final  Epic epic;
 
     @Override
     public boolean equals(Object o) {
@@ -24,7 +26,7 @@ public class SubTask extends Task {
                 epic.getId();
     }
 
-    public SubTask(String name, String description, Epic epic, long duration,String time) {
+    public SubTask(String name, String description, Epic epic, long duration, LocalDateTime time) {
         super(name, description,duration,time);
         this.epic = epic;
         this.type = TypeTasks.SUB_TASK;

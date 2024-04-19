@@ -49,7 +49,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return fileBackedTasksManager;
     }
 
-    private static String historyToString(HistoryManager manager) {
+    protected static String historyToString(HistoryManager manager) {
         List<Task> tasks = manager.getHistory();
         StringBuilder taskString = new StringBuilder();
         taskString.append("\n");
@@ -88,16 +88,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    private Task fromString(String value) {
+    protected Task fromString(String value) {
         String[] word = value.split(",");
-        //boolean isTime = false;
         boolean isTime = Long.parseLong(word[5]) > 0;
-        String startTime = word[6];
+        LocalDateTime startTime = LocalDateTime.parse(word[6]);
         long duration = Long.parseLong(word[5]);
 
         switch (TypeTasks.valueOf(word[1])) {
             case TASK:
-                Task task = new Task(word[2], word[4], Long.parseLong(word[5]), word[6]);
+                Task task = new Task(word[2], word[4], Long.parseLong(word[5]), startTime);
                 task.setId(Integer.parseInt(word[0]));
                 create(task);
                 task.setStatus(Statuses.valueOf(word[3]));
@@ -108,7 +107,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 return task;
 
             case EPIC:
-                Epic epic = new Epic(word[2], word[4], Long.parseLong(word[5]), word[6]);
+                Epic epic = new Epic(word[2], word[4], Long.parseLong(word[5]), startTime);
                 epic.setId(Integer.parseInt(word[0]));
                 create(epic);
                 epic.setStatus(Statuses.valueOf(word[3]));
@@ -117,7 +116,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
             case SUB_TASK:
                 SubTask subTask = new SubTask(word[2], word[4], epics.get(Integer.parseInt(word[7])),
-                        Long.parseLong(word[5]), word[6]);
+                        Long.parseLong(word[5]), startTime);
                 subTask.setId(Integer.parseInt(word[0]));
                 create(subTask);
                 subTask.setStatus(Statuses.valueOf(word[3]));
@@ -131,7 +130,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return null;
     }
 
-    private void save() {
+    protected void save() {
         try {
             Writer fileWriter = new FileWriter(fileSave);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -241,9 +240,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void update(Task task) {
-        super.update(task);
+    public Task update(Task task) {
+        Task taskUpdate = super.update(task);
         save();
+        return taskUpdate;
     }
 
     @Override
@@ -253,8 +253,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void update(SubTask subTask) {
-        super.update(subTask);
+    public SubTask update(SubTask subTask) {
+       SubTask subTaskUpdate = super.update(subTask);
         save();
+        return subTaskUpdate;
     }
 }

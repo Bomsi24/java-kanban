@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -29,7 +30,8 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
 
     @Test
     public void loadFromFileEpicWithoutSubtasks() {
-        Epic epic = manager.create(new Epic("Эпик1", "Описание", 0, null));
+        Epic epic = manager.create(new Epic("Эпик1", "Описание", 10,
+                LocalDateTime.of(2024, 1, 6, 10, 00)));
         final FileBackedTasksManager newBackedTasksManagerClear = FileBackedTasksManager.loadFromFile(fileSaveHistory);
         final List<Epic> epics = newBackedTasksManagerClear.getAllEpics();
         Assertions.assertEquals(1, epics.size(), "Список задач не пуст");
@@ -37,7 +39,8 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
 
     @Test
     public void loadFromFileTest() {
-        final Task task1 = manager.create(new Task("Купить молоко", "Сходить в магазин", 10, "07:00 06.01.24"));
+        final Task task1 = manager.create(new Task("Купить молоко", "Сходить в магазин", 10,
+                LocalDateTime.of(2024, 1, 6, 10, 00)));
 
         manager.getTask(task1.getId());
 

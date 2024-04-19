@@ -28,7 +28,7 @@ public class InMemoryTaskManager implements TaskManager {
             prioritizedTasks.add(task);
             return task;
         }
-        System.out.println("У задачи " + task.getName() + " не с");
+        System.out.println("Задача " + task.getName() + " не создана");
         return null;
     }
 
@@ -174,15 +174,17 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void update(Task task) {
+    public Task update(Task task) {
         if (taskValidation(task)) {
             tasks.put(task.getId(), task);
             prioritizedTasks.add(task);
+            return task;
         }
+        return null;
     }
 
     @Override
-    public void update(SubTask subTask) {
+    public SubTask update(SubTask subTask) {
         if (taskValidation(subTask)) {
             subTasks.put(subTask.getId(), subTask);
             Epic epic = subTask.getEpicOfSubTask();
@@ -190,7 +192,9 @@ public class InMemoryTaskManager implements TaskManager {
             updateStatusEpic(epic);
             prioritizedTasks.add(subTask);
             updateTimesEpic(epic);
+            return subTask;
         }
+        return null;
     }
 
     @Override
@@ -252,17 +256,17 @@ public class InMemoryTaskManager implements TaskManager {
 
             if (startTime == null || subTask.getStartTime().isBefore(startTime)) { //проверка на начало
                 startTime = subTask.getStartTime();
-                startTimeString = subTask.getStartTimeToString();
+                //startTimeString = subTask.getStartTimeToString();
             }
             if (endTime == null || subTask.getEndTime().isAfter(endTime)) {
                 endTime = subTask.getEndTime();
-                endTimeString = subTask.getEndTimeToString();
+                //endTimeString = subTask.getEndTimeToString();
             }
 
             duration = duration + subTask.getDuration();
         }
         if (startTime != null) {
-            epic.createTime(duration, startTimeString);
+            epic.createTime(duration, startTime);
             epic.setEndTime(endTime);
         }
     }

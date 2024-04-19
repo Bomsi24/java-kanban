@@ -1,11 +1,6 @@
 package com.yandex.app.model;
 
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 public class Task {
@@ -17,8 +12,6 @@ public class Task {
     protected String description;
     protected long duration = 0;
     protected LocalDateTime startTime;
-
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yy");
 
     @Override
     public String toString() {
@@ -32,7 +25,7 @@ public class Task {
 
         } else {
             return toString + ',' + duration + ',' +
-                    startTime.format(formatter);
+                    startTime;
         }
     }
 
@@ -44,25 +37,23 @@ public class Task {
         return id == task.id && duration == task.duration && type == task.type &&
                 Objects.equals(name, task.name) && status == task.status &&
                 Objects.equals(description, task.description) &&
-                Objects.equals(startTime, task.startTime) && Objects.equals(formatter, task.formatter);
+                Objects.equals(startTime, task.startTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, name, status, description, duration, startTime, formatter);
+        return Objects.hash(id, type, name, status, description, duration, startTime);
     }
 
 
-    public Task(String name, String description, long duration, String startTime) {
+    public Task(String name, String description, long duration, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
         this.status = Statuses.NEW;
         this.type = TypeTasks.TASK;
-        if(startTime != null && !(startTime.equals("null"))) {
-            createTime(duration, startTime);
-        }
+        this.startTime = startTime;
+        this.duration = duration;
     }
-
 
     public String getName() {
         return name;
@@ -96,8 +87,8 @@ public class Task {
         return type;
     }
 
-    public String getStartTimeToString() {
-        return startTime.format(formatter);
+    public LocalDateTime getStartTimeToString() {
+        return startTime;
     }
 
     public LocalDateTime getStartTime() {
@@ -109,24 +100,22 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        if(startTime != null) {
+        if (startTime != null) {
             return startTime.plusMinutes(duration);
         }
         return null;
     }
 
-    public String getEndTimeToString() {
-        if(startTime != null) {
-            return startTime.plusMinutes(duration).format(formatter);
+    public LocalDateTime getEndTimeToString() {
+        if (startTime != null) {
+            return startTime.plusMinutes(duration);
         }
         return null;
     }
 
-    public void createTime(long duration, String startTime) {
+    public void createTime(long duration, LocalDateTime startTime) {
         this.duration = duration;
-        this.startTime = LocalDateTime.parse(startTime, formatter);
-
-
+        this.startTime = startTime;
     }
 
 }
