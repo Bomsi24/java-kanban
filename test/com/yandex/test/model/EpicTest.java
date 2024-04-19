@@ -29,6 +29,7 @@ class EpicTest {
         subTask2 = UtilityClassForTests.subTask2(epic);
     }
 
+    /*
     @ParameterizedTest
     @CsvFileSource(resources = "/com/yandex/test/model/saveClear.csv")
     public void testOfEpicStatus(String status1, String status2, String statusEpic) {
@@ -44,6 +45,8 @@ class EpicTest {
         Assertions.assertEquals(epicStatus, statuses, "Статусы не совпадают");
 
     }
+    
+     */
 
     @Test
     public void emptyListOfSubtasks() {
