@@ -44,7 +44,8 @@ public class TasksHandler implements HttpHandler {
         String path = exchange.getRequestURI().getPath();
         String response;
 
-        if (Pattern.matches("^/tasks$", path)) {//Если нет id возвращаем все задачи
+        if (Pattern.matches("^/tasks$", path)) {
+
             List<Task> tasks = manager.getAllTasks();
             response = gson.toJson(tasks);
             sendText(exchange, response);
@@ -68,7 +69,9 @@ public class TasksHandler implements HttpHandler {
 
     private void tasksPost(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
-        if (Pattern.matches("^/tasks$", path)) {//Создаем
+
+        if (Pattern.matches("^/tasks$", path)) {
+
             String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
             Task taskRequest = gson.fromJson(body, Task.class);
             Task taskCreate = manager.create(taskRequest);
@@ -78,25 +81,31 @@ public class TasksHandler implements HttpHandler {
                 exchange.close();
 
             } else {
+
                 writeResponse(exchange, "Задача пересекается с существующими", 406);
             }
-        } else if (Pattern.matches("^/tasks/\\d+$", path)) { 
+        } else if (Pattern.matches("^/tasks/\\d+$", path)) {
+
             String pathId = path.replaceFirst("/tasks/", "");
             int id = parsePathId(pathId);
             if (id > 0) {
+
                 String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                 Task taskRequest = gson.fromJson(body, Task.class);
                 Task taskUpdate = manager.update(taskRequest);
                 if (taskUpdate != null) {
+
                     System.out.println("Задача обновлена");
                     exchange.sendResponseHeaders(201, 0);
                     exchange.close();
 
                 } else {
+
                     writeResponse(exchange, "Задача пересекается с существующими", 406);
                 }
 
             } else {
+
                 writeResponse(exchange, "Некорректный id =  " + pathId, 406);
             }
         }
@@ -105,14 +114,16 @@ public class TasksHandler implements HttpHandler {
     private void tasksDelete(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
 
-        if (Pattern.matches("^/tasks$", path)) {//Если нет id возвращаем все задачи
+        if (Pattern.matches("^/tasks$", path)) {
+
             manager.deleteTasks();
             System.out.println("Задачи удалены");
             exchange.sendResponseHeaders(201, 0);
             exchange.close();
-          
-        } else if (Pattern.matches("^/tasks/\\d+$", path)) { //Если есть id возвращаем задачу по id
-            String pathId = path.replaceFirst("/tasks/", "");// должен вернуть id
+
+        } else if (Pattern.matches("^/tasks/\\d+$", path)) {
+
+            String pathId = path.replaceFirst("/tasks/", "");
             int id = parsePathId(pathId);
             if (id > 0) {
                 manager.deleteTaskInId(id);
@@ -121,6 +132,7 @@ public class TasksHandler implements HttpHandler {
                 exchange.close();
 
             } else {
+
                 writeResponse(exchange, "Некорректный id =  " + pathId, 406);
             }
         }
