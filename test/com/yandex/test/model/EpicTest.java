@@ -4,7 +4,6 @@ import com.yandex.app.model.Epic;
 import com.yandex.app.model.Statuses;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.service.manager.InMemoryTaskManager;
-import com.yandex.app.service.manager.Managers;
 import com.yandex.app.service.manager.TaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +30,7 @@ class EpicTest {
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/saveClear.csv")
+    @CsvFileSource(resources = "/com/yandex/test/model/saveClear.csv")
     public void testOfEpicStatus(String status1, String status2, String statusEpic) {
 
         subTask1.setStatus(Statuses.valueOf(status1));
