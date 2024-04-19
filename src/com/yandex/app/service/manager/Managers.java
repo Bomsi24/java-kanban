@@ -13,7 +13,7 @@ public class Managers {
 
     }
 
-    public static TaskManager getDefault()  {
+    public static TaskManager getDefault() {
         return new InMemoryTaskManager();
     }
 
@@ -29,7 +29,5 @@ public class Managers {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
         return gsonBuilder.create();
-
-  
     }
 }
