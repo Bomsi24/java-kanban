@@ -8,8 +8,6 @@ import com.yandex.app.service.manager.TaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvFileSource;
 
 import java.time.LocalDateTime;
 
@@ -29,6 +27,50 @@ class EpicTest {
         subTask2 = UtilityClassForTests.subTask2(epic);
     }
 
+    @Test
+    public void statusEpicTest() {
+        Statuses epicStatus;
+        subTask1.setStatus(Statuses.NEW);
+        subTask2.setStatus(Statuses.NEW);
+        manager.update(subTask1);
+        manager.update(subTask2);
+
+       epicStatus = epic.getCurrentStatus();
+       Statuses statusesNew = Statuses.NEW;
+
+        Assertions.assertEquals(epicStatus, statusesNew, "Статусы не совпадают");
+
+        subTask1.setStatus(Statuses.DONE);
+        subTask2.setStatus(Statuses.DONE);
+        manager.update(subTask1);
+        manager.update(subTask2);
+
+        epicStatus = epic.getCurrentStatus();
+        Statuses statusesDone = Statuses.DONE;
+
+        Assertions.assertEquals(epicStatus, statusesDone, "Статусы не совпадают");
+
+        subTask1.setStatus(Statuses.NEW);
+        subTask2.setStatus(Statuses.DONE);
+        manager.update(subTask1);
+        manager.update(subTask2);
+
+        epicStatus = epic.getCurrentStatus();
+       Statuses statusesInProgress = Statuses.IN_PROGRESS;
+
+        Assertions.assertEquals(epicStatus, statusesInProgress, "Статусы не совпадают");
+
+        subTask1.setStatus(Statuses.IN_PROGRESS);
+        subTask2.setStatus(Statuses.IN_PROGRESS);
+        manager.update(subTask1);
+        manager.update(subTask2);
+
+        epicStatus = epic.getCurrentStatus();
+
+        Assertions.assertEquals(epicStatus, statusesInProgress, "Статусы не совпадают");
+    }
+
+
     /*
     @ParameterizedTest
     @CsvFileSource(resources = "/com/yandex/test/model/saveClear.csv")
@@ -45,7 +87,7 @@ class EpicTest {
         Assertions.assertEquals(epicStatus, statuses, "Статусы не совпадают");
 
     }
-    
+
      */
 
     @Test
