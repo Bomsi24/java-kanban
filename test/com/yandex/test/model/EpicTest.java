@@ -71,25 +71,6 @@ class EpicTest {
     }
 
 
-    /*
-    @ParameterizedTest
-    @CsvFileSource(resources = "/com/yandex/test/model/saveClear.csv")
-    public void testOfEpicStatus(String status1, String status2, String statusEpic) {
-
-        subTask1.setStatus(Statuses.valueOf(status1));
-        subTask2.setStatus(Statuses.valueOf(status2));
-        manager.update(subTask1);
-        manager.update(subTask2);
-
-        Statuses epicStatus = epic.getCurrentStatus();
-        Statuses statuses = Statuses.valueOf(statusEpic);
-
-        Assertions.assertEquals(epicStatus, statuses, "Статусы не совпадают");
-
-    }
-
-     */
-
     @Test
     public void emptyListOfSubtasks() {
         int subTasksNull = epic.getSubTasks().size();//проверка, что в эпике нет Саб Тасков.
