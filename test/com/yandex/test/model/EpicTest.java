@@ -73,7 +73,7 @@ class EpicTest {
         manager.update(subTask2);
 
         LocalDateTime timeTestStart = LocalDateTime.of(2024, 1, 6, 10, 00);
-        LocalDateTime timeTestEnd = LocalDateTime.of(2024, 1, 6, 11, 30);
+        LocalDateTime timeTestEnd = LocalDateTime.of(2024, 1, 6, 12, 00);
         long durationTest = 50;
         LocalDateTime timeStartOfEpic = epic.getStartTime();
         LocalDateTime timeEndOfEpic = epic.getEndTime();
