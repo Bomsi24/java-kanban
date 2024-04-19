@@ -44,7 +44,8 @@ public class EpicsHandler implements HttpHandler {
         String path = exchange.getRequestURI().getPath();
         String response;
 
-        if (Pattern.matches("^/epics$", path)) {//Если нет id возвращаем все задачи
+        if (Pattern.matches("^/epics$", path)) {
+
             List<Epic> epics = manager.getAllEpics();
             response = gson.toJson(epics);
             sendText(exchange, response);
@@ -64,14 +65,14 @@ public class EpicsHandler implements HttpHandler {
             } else {
                 writeResponse(exchange, "Некорректный id =  " + pathId, 406);
 
-         
             }
         }
     }
 
     private void epicsPost(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
-        if (Pattern.matches("^/epics$", path)) {//Создаем
+        if (Pattern.matches("^/epics$", path)) {
+
             String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
             Epic epicRequest = gson.fromJson(body, Epic.class);
             Epic epicCreate = manager.create(epicRequest);
@@ -97,7 +98,6 @@ public class EpicsHandler implements HttpHandler {
             } else {
                 writeResponse(exchange, "Некорректный id =  " + pathId, 406);
 
-          
             }
         }
     }
@@ -105,12 +105,13 @@ public class EpicsHandler implements HttpHandler {
     private void epicsDelete(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
 
-        if (Pattern.matches("^/epics$", path)) {//Если нет id возвращаем все задачи
+        if (Pattern.matches("^/epics$", path)) {
+
             manager.deleteEpics();
             System.out.println("Все эпики удалены");
             exchange.sendResponseHeaders(201, 0);
             exchange.close();
-         
+
         } else if (Pattern.matches("^/epics/\\d+$", path)) { //Если есть id возвращаем задачу по id
             String pathId = path.replaceFirst("/epics/", "");// должен вернуть id
             int id = parsePathId(pathId);
@@ -123,7 +124,6 @@ public class EpicsHandler implements HttpHandler {
             } else {
                 writeResponse(exchange, "Некорректный id =  " + pathId, 406);
 
-       
             }
         }
     }
