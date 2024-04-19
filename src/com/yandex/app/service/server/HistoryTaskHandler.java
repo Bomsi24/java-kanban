@@ -45,7 +45,6 @@ public class HistoryTaskHandler implements HttpHandler {
         }
     }
 
-  
     private void writeResponse(HttpExchange exchange,
                                String responseString,
                                int responseCode) throws IOException {
