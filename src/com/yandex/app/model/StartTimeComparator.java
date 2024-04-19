@@ -20,7 +20,7 @@ public class StartTimeComparator implements Comparator<Task> {
         } else if (o1.getId() == o2.getId()) {
             return 0;
 
-        }else {
+        } else {
             return 1;
         }
     }
