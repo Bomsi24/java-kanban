@@ -244,6 +244,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Task taskUpdate = super.update(task);
         save();
         return taskUpdate;
+
     }
 
     @Override
@@ -254,7 +255,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     @Override
     public SubTask update(SubTask subTask) {
-       SubTask subTaskUpdate = super.update(subTask);
+        SubTask subTaskUpdate = super.update(subTask);
         save();
         return subTaskUpdate;
     }

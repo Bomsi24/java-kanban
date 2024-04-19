@@ -20,6 +20,7 @@ public class HistoryTaskHandler implements HttpHandler {
     public HistoryTaskHandler(TaskManager manager) {
         this.manager = manager;
         gson = Managers.getGson();
+
     }
 
     @Override
@@ -28,6 +29,7 @@ public class HistoryTaskHandler implements HttpHandler {
         if (method.equals("GET")) {
             String path = exchange.getRequestURI().getPath();
             if (Pattern.matches("^/history$", path)) {
+
                 List<Task> history = manager.getHistory();
                 String responseJson = gson.toJson(history);
                 byte[] responseByte = responseJson.getBytes(StandardCharsets.UTF_8);
@@ -41,9 +43,9 @@ public class HistoryTaskHandler implements HttpHandler {
         } else {
             writeResponse(exchange, "Неверный метод: " + method + ". Нужен метод GET", 406);
         }
-
     }
 
+  
     private void writeResponse(HttpExchange exchange,
                                String responseString,
                                int responseCode) throws IOException {

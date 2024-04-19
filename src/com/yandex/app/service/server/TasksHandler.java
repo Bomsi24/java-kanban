@@ -77,11 +77,11 @@ public class TasksHandler implements HttpHandler {
                 exchange.sendResponseHeaders(201, 0);
                 exchange.close();
 
-            } else {//Код ошибки\
+            } else {
                 writeResponse(exchange, "Задача пересекается с существующими", 406);
             }
-        } else if (Pattern.matches("^/tasks/\\d+$", path)) { //Если есть id возвращаем задачу по id
-            String pathId = path.replaceFirst("/tasks/", "");// должен вернуть id
+        } else if (Pattern.matches("^/tasks/\\d+$", path)) { 
+            String pathId = path.replaceFirst("/tasks/", "");
             int id = parsePathId(pathId);
             if (id > 0) {
                 String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
@@ -110,6 +110,7 @@ public class TasksHandler implements HttpHandler {
             System.out.println("Задачи удалены");
             exchange.sendResponseHeaders(201, 0);
             exchange.close();
+          
         } else if (Pattern.matches("^/tasks/\\d+$", path)) { //Если есть id возвращаем задачу по id
             String pathId = path.replaceFirst("/tasks/", "");// должен вернуть id
             int id = parsePathId(pathId);
