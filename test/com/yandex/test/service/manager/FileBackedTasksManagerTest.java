@@ -12,8 +12,8 @@ import java.util.List;
 
 public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
-    private final String fileSaveHistory = "save.csv";
-    private final String fileSaveClear = "saveClear.csv";
+    String fileSaveHistory = "save.csv";
+    String fileSaveClear = "saveClear.csv";
 
     @BeforeEach
     public void createInMemoryTasksManagerTest() {
