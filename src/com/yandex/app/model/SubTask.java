@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class SubTask extends Task {
 
-    private final  Epic epic;
+    private final Epic epic;
 
     @Override
     public boolean equals(Object o) {

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import com.yandex.app.model.HttpStatusCode;
 import com.yandex.app.model.Task;
 import com.yandex.app.service.manager.Managers;
 import com.yandex.app.service.manager.TaskManager;
@@ -50,8 +51,8 @@ public class TasksHandler implements HttpHandler {
             response = gson.toJson(tasks);
             sendText(exchange, response);
 
-        } else if (Pattern.matches("^/tasks/\\d+$", path)) { //Если есть id возвращаем задачу по id
-            String pathId = path.replaceFirst("/tasks/", "");// должен вернуть id
+        } else if (Pattern.matches("^/tasks/\\d+$", path)) {
+            String pathId = path.replaceFirst("/tasks/", "");
             int id = parsePathId(pathId);
             if (id > 0) {
                 Task task = manager.getTask(id);
@@ -59,10 +60,12 @@ public class TasksHandler implements HttpHandler {
                     response = gson.toJson(task);
                     sendText(exchange, response);
                 }
-                writeResponse(exchange, "Задачи с id = " + pathId + " нет.", 404);
+                writeResponse(exchange, "Задачи с id = " + pathId + " нет.",
+                        HttpStatusCode.NOT_FOUND.getCode());
 
             } else {
-                writeResponse(exchange, "Некорректный id =  " + pathId, 404);
+                writeResponse(exchange, "Некорректный id =  " + pathId,
+                        HttpStatusCode.NOT_FOUND.getCode());
             }
         }
     }
@@ -77,12 +80,13 @@ public class TasksHandler implements HttpHandler {
             Task taskCreate = manager.create(taskRequest);
             if (taskCreate != null) {
                 System.out.println("Задача создана");
-                exchange.sendResponseHeaders(201, 0);
+                exchange.sendResponseHeaders(HttpStatusCode.CREATED.getCode(), 0);
                 exchange.close();
 
             } else {
 
-                writeResponse(exchange, "Задача пересекается с существующими", 406);
+                writeResponse(exchange, "Задача пересекается с существующими",
+                        HttpStatusCode.NOT_ACCEPTABLE.getCode());
             }
         } else if (Pattern.matches("^/tasks/\\d+$", path)) {
 
@@ -96,17 +100,19 @@ public class TasksHandler implements HttpHandler {
                 if (taskUpdate != null) {
 
                     System.out.println("Задача обновлена");
-                    exchange.sendResponseHeaders(201, 0);
+                    exchange.sendResponseHeaders(HttpStatusCode.CREATED.getCode(), 0);
                     exchange.close();
 
                 } else {
 
-                    writeResponse(exchange, "Задача пересекается с существующими", 406);
+                    writeResponse(exchange, "Задача пересекается с существующими",
+                            HttpStatusCode.NOT_ACCEPTABLE.getCode());
                 }
 
             } else {
 
-                writeResponse(exchange, "Некорректный id =  " + pathId, 406);
+                writeResponse(exchange, "Некорректный id =  " + pathId,
+                        HttpStatusCode.NOT_ACCEPTABLE.getCode());
             }
         }
     }
@@ -118,7 +124,7 @@ public class TasksHandler implements HttpHandler {
 
             manager.deleteTasks();
             System.out.println("Задачи удалены");
-            exchange.sendResponseHeaders(201, 0);
+            exchange.sendResponseHeaders(HttpStatusCode.CREATED.getCode(), 0);
             exchange.close();
 
         } else if (Pattern.matches("^/tasks/\\d+$", path)) {
@@ -128,12 +134,13 @@ public class TasksHandler implements HttpHandler {
             if (id > 0) {
                 manager.deleteTaskInId(id);
                 System.out.println("Задача удалена");
-                exchange.sendResponseHeaders(201, 0);
+                exchange.sendResponseHeaders(HttpStatusCode.CREATED.getCode(), 0);
                 exchange.close();
 
             } else {
 
-                writeResponse(exchange, "Некорректный id =  " + pathId, 406);
+                writeResponse(exchange, "Некорректный id =  " + pathId,
+                        HttpStatusCode.NOT_ACCEPTABLE.getCode());
             }
         }
     }
@@ -141,7 +148,7 @@ public class TasksHandler implements HttpHandler {
     private void sendText(HttpExchange exchange, String text) throws IOException {
         byte[] resp = text.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        exchange.sendResponseHeaders(200, resp.length);
+        exchange.sendResponseHeaders(HttpStatusCode.OK.getCode(), resp.length);
         exchange.getResponseBody().write(resp);
     }
 

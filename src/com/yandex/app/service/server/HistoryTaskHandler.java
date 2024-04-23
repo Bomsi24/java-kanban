@@ -3,6 +3,7 @@ package com.yandex.app.service.server;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import com.yandex.app.model.HttpStatusCode;
 import com.yandex.app.model.Task;
 import com.yandex.app.service.manager.Managers;
 import com.yandex.app.service.manager.TaskManager;
@@ -34,14 +35,16 @@ public class HistoryTaskHandler implements HttpHandler {
                 String responseJson = gson.toJson(history);
                 byte[] responseByte = responseJson.getBytes(StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-                exchange.sendResponseHeaders(200, responseByte.length);
+                exchange.sendResponseHeaders(HttpStatusCode.OK.getCode(), responseByte.length);
                 exchange.getResponseBody().write(responseByte);
             } else {
-                writeResponse(exchange, "Неверный путь " + path, 406);
+                writeResponse(exchange, "Неверный путь " + path,
+                        HttpStatusCode.NOT_ACCEPTABLE.getCode());
             }
 
         } else {
-            writeResponse(exchange, "Неверный метод: " + method + ". Нужен метод GET", 406);
+            writeResponse(exchange, "Неверный метод: " + method + ". Нужен метод GET",
+                    HttpStatusCode.NOT_ACCEPTABLE.getCode());
         }
     }
 

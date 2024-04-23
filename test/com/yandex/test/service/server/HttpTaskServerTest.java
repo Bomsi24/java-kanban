@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.SubTask;
+import com.yandex.app.model.SubTaskDto;
 import com.yandex.app.model.Task;
 import com.yandex.app.service.manager.Managers;
 import com.yandex.app.service.manager.TaskManager;
@@ -28,8 +29,8 @@ public class HttpTaskServerTest {
     private HttpTaskServer taskServer;
     private TaskManager taskManager;
     private Task task1;
-    Epic epic1;
-    SubTask subTask1;
+    private Epic epic1;
+    private SubTask subTask1;
     private final URI uriConst = URI.create("http://localhost:8080");
     private final Gson gson = Managers.getGson();
 
@@ -45,6 +46,7 @@ public class HttpTaskServerTest {
         subTask1 = new SubTask("Заказ материалов",
                 "Нужно на сайте Леруа мерлен заказать материалы",
                 epic1, 17, LocalDateTime.of(2024, 5, 10, 17, 1));
+        epic1.clearSubTask();
         taskManager = Managers.getDefault();
         taskServer = new HttpTaskServer(taskManager);
 
@@ -291,9 +293,17 @@ public class HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         Assertions.assertEquals(200, response.statusCode());
 
-        Type subTaskType = new TypeToken<ArrayList<SubTask>>() {
+        Type subTaskType = new TypeToken<ArrayList<SubTaskDto>>() {
         }.getType();
-        List<SubTask> actual = gson.fromJson(response.body(), subTaskType);
+        List<SubTaskDto> subTaskDto = gson.fromJson(response.body(), subTaskType);
+        List<SubTask> actual = new ArrayList<>();
+
+        if (!subTaskDto.isEmpty()) {
+            for (SubTaskDto task : subTaskDto) {
+                actual.add(new SubTask(task.getName(),
+                        task.getDescription(), epic1, task.getDuration(), task.getStartTime()));
+            }
+        }
 
         Assertions.assertNotNull(actual, "Список пуст");
         Assertions.assertEquals(1, actual.size(), "Неверное количество");
@@ -316,9 +326,10 @@ public class HttpTaskServerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         Assertions.assertEquals(200, response.statusCode());
 
-        Type subTaskType = new TypeToken<SubTask>() {
+        Type subTaskType = new TypeToken<SubTaskDto>() {
         }.getType();
-        Task actual = gson.fromJson(response.body(), subTaskType);
+        SubTaskDto subTaskDto = gson.fromJson(response.body(), subTaskType);
+        SubTask actual = new SubTask(subTaskDto.getName(), subTaskDto.getDescription(), epic1, subTaskDto.getDuration(), subTaskDto.getStartTime());
 
         Assertions.assertNotNull(actual, "Список пуст");
         Assertions.assertEquals(subTask1, actual, "Задачи не совпадают");
@@ -326,51 +337,42 @@ public class HttpTaskServerTest {
     }
 
     @Test
-    void postSubTaskCreateOnTheServer() {
-        try {
-            HttpClient client = HttpClient.newHttpClient();
-            SubTask subTaskPost = new SubTask("Заказ материалов",
-                    "Нужно на сайте Леруа мерлен заказать материалы",
-                    epic1, 17, LocalDateTime.now());
+    void postSubTaskCreateOnTheServer() throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        SubTask subTaskPost = new SubTask("Заказ материалов",
+                "Нужно на сайте Леруа мерлен заказать материалы",
+                epic1, 17, LocalDateTime.now());
 
-            URI uri = URI.create(uriConst + "/subtasks");
-            String jsonEpic = gson.toJson(subTaskPost);
-            HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(jsonEpic, StandardCharsets.UTF_8);
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .POST(bodyPublisher)
-                    .build();
+        URI uri = URI.create(uriConst + "/subtasks");
+        String jsonEpic = gson.toJson(subTaskPost);
+        HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(jsonEpic, StandardCharsets.UTF_8);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .POST(bodyPublisher)
+                .build();
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            Assertions.assertEquals(201, response.statusCode());
-
-        } catch (IOException | InterruptedException exception) {
-            exception.getMessage();
-        }
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        Assertions.assertEquals(201, response.statusCode());
 
     }
 
     @Test
-    void postUpdateSubTaskOnServer() {
-        try {
-            HttpClient client = HttpClient.newHttpClient();
-            SubTask subTaskPost = new SubTask("Заказ материалов",
-                    "Нужно на сайте Леруа мерлен заказать материалы",
-                    epic1, 17, LocalDateTime.now());
+    void postUpdateSubTaskOnServer() throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        SubTask subTaskPost = new SubTask("Заказ материалов",
+                "Нужно на сайте Леруа мерлен заказать материалы",
+                epic1, 17, LocalDateTime.of(2024, 5, 10, 17, 1));
 
-            URI uri = URI.create(uriConst + "/subtasks/1");
-            String jsonEpic = gson.toJson(subTaskPost);
-            HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(jsonEpic, StandardCharsets.UTF_8);
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .POST(bodyPublisher)
-                    .build();
+        URI uri = URI.create(uriConst + "/subtasks/1");
+        String jsonEpic = gson.toJson(subTaskPost);
+        HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(jsonEpic, StandardCharsets.UTF_8);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .POST(bodyPublisher)
+                .build();
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            Assertions.assertEquals(201, response.statusCode());
-        } catch (IOException | InterruptedException exception) {
-            System.out.println(exception);
-        }
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        Assertions.assertEquals(201, response.statusCode());
 
     }
 

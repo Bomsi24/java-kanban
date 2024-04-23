@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int idTask = 0;//идентификатор
+    private int idTask = 0;
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
     protected final Map<Integer, Task> tasks = new HashMap<>();
@@ -254,11 +254,11 @@ public class InMemoryTaskManager implements TaskManager {
 
             if (startTime == null || subTask.getStartTime().isBefore(startTime)) { //проверка на начало
                 startTime = subTask.getStartTime();
-                //startTimeString = subTask.getStartTimeToString();
+
             }
             if (endTime == null || subTask.getEndTime().isAfter(endTime)) {
                 endTime = subTask.getEndTime();
-                //endTimeString = subTask.getEndTimeToString();
+
             }
 
             duration = duration + subTask.getDuration();

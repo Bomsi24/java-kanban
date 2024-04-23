@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.yandex.app.model.Epic;
+import com.yandex.app.model.HttpStatusCode;
 import com.yandex.app.service.manager.Managers;
 
 import com.yandex.app.service.manager.TaskManager;
@@ -51,8 +52,8 @@ public class EpicsHandler implements HttpHandler {
             sendText(exchange, response);
 
 
-        } else if (Pattern.matches("^/epics/\\d+$", path)) { //Если есть id возвращаем задачу по id
-            String pathId = path.replaceFirst("/epics/", "");// должен вернуть id
+        } else if (Pattern.matches("^/epics/\\d+$", path)) {
+            String pathId = path.replaceFirst("/epics/", "");
             int id = parsePathId(pathId);
             if (id > 0) {
                 Epic epic = manager.getEpic(id);
@@ -60,10 +61,12 @@ public class EpicsHandler implements HttpHandler {
                     response = gson.toJson(epic);
                     sendText(exchange, response);
                 }
-                writeResponse(exchange, "Эпика с id = " + pathId + " нет.", 404);
+                writeResponse(exchange, "Эпика с id = " + pathId + " нет.",
+                        HttpStatusCode.NOT_FOUND.getCode());
 
             } else {
-                writeResponse(exchange, "Некорректный id =  " + pathId, 406);
+                writeResponse(exchange, "Некорректный id =  " + pathId,
+                        HttpStatusCode.NOT_ACCEPTABLE.getCode());
 
             }
         }
@@ -78,25 +81,27 @@ public class EpicsHandler implements HttpHandler {
             Epic epicCreate = manager.create(epicRequest);
             if (epicCreate != null) {
                 System.out.println("Эпик создан");
-                exchange.sendResponseHeaders(201, 0);
+                exchange.sendResponseHeaders(HttpStatusCode.CREATED.getCode(), 0);
                 exchange.close();
 
             } else {
-                writeResponse(exchange, "Эпик пересекается с существующим", 406);
+                writeResponse(exchange, "Эпик пересекается с существующим",
+                        HttpStatusCode.NOT_ACCEPTABLE.getCode());
             }
-        } else if (Pattern.matches("^/epics/\\d+$", path)) { //Если есть id возвращаем задачу по id
-            String pathId = path.replaceFirst("/epics/", "");// должен вернуть id
+        } else if (Pattern.matches("^/epics/\\d+$", path)) {
+            String pathId = path.replaceFirst("/epics/", "");
             int id = parsePathId(pathId);
             if (id > 0) {
                 String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                 Epic epicRequest = gson.fromJson(body, Epic.class);
                 manager.update(epicRequest);
                 System.out.println("Эпик обновлен");
-                exchange.sendResponseHeaders(201, 0);
+                exchange.sendResponseHeaders(HttpStatusCode.CREATED.getCode(), 0);
                 exchange.close();
 
             } else {
-                writeResponse(exchange, "Некорректный id =  " + pathId, 406);
+                writeResponse(exchange, "Некорректный id =  " + pathId,
+                        HttpStatusCode.NOT_ACCEPTABLE.getCode());
 
             }
         }
@@ -109,7 +114,7 @@ public class EpicsHandler implements HttpHandler {
 
             manager.deleteEpics();
             System.out.println("Все эпики удалены");
-            exchange.sendResponseHeaders(201, 0);
+            exchange.sendResponseHeaders(HttpStatusCode.CREATED.getCode(), 0);
             exchange.close();
 
         } else if (Pattern.matches("^/epics/\\d+$", path)) { //Если есть id возвращаем задачу по id
@@ -118,11 +123,12 @@ public class EpicsHandler implements HttpHandler {
             if (id > 0) {
                 manager.deleteTaskInId(id);
                 System.out.println("Эпик удален");
-                exchange.sendResponseHeaders(201, 0);
+                exchange.sendResponseHeaders(HttpStatusCode.CREATED.getCode(), 0);
                 exchange.close();
 
             } else {
-                writeResponse(exchange, "Некорректный id =  " + pathId, 406);
+                writeResponse(exchange, "Некорректный id =  " + pathId,
+                        HttpStatusCode.NOT_ACCEPTABLE.getCode());
 
             }
         }
@@ -131,7 +137,7 @@ public class EpicsHandler implements HttpHandler {
     private void sendText(HttpExchange exchange, String text) throws IOException {
         byte[] resp = text.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        exchange.sendResponseHeaders(200, resp.length);
+        exchange.sendResponseHeaders(HttpStatusCode.OK.getCode(), resp.length);
         exchange.getResponseBody().write(resp);
     }
 

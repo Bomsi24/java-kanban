@@ -9,11 +9,9 @@ import java.net.InetSocketAddress;
 
 public class HttpTaskServer {
     private final int port = 8080;
-    private TaskManager taskManager;
     private final HttpServer server;
 
     public HttpTaskServer(TaskManager taskManager) throws IOException {
-        this.taskManager = taskManager;
         server = HttpServer.create(new InetSocketAddress("localhost", port), 0);
         server.createContext("/tasks", new TasksHandler(taskManager));
         server.createContext("/subtasks", new SubTasksHandler(taskManager));
@@ -27,19 +25,15 @@ public class HttpTaskServer {
         HttpTaskServer httpTaskServer = new HttpTaskServer(Managers.getDefault());
         httpTaskServer.start();
         httpTaskServer.stop();
-
     }
 
     public void start() {
         System.out.println("Старт сервера на порту " + port);
         server.start();
-
     }
 
     public void stop() {
         System.out.println("Остановка сервера на порту " + port);
         server.stop(0);
     }
-
-
 }

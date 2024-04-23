@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
-    private final transient List<SubTask> subTasks = new ArrayList<>();
+    private final List<SubTask> subTasks = new ArrayList<>();
     private LocalDateTime endTime;
 
-    public Epic(String name, String description,long duration,LocalDateTime time) {
-        super(name, description,duration,time);
+    public Epic(String name, String description, long duration, LocalDateTime time) {
+        super(name, description, duration, time);
         this.type = TypeTasks.EPIC;
     }
 
     public void setSubTasks(SubTask subTask) {
-            subTasks.add(subTask);
+        subTasks.add(subTask);
     }
 
     public List<SubTask> getSubTasks() {

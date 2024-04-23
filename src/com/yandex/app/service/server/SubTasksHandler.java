@@ -3,13 +3,16 @@ package com.yandex.app.service.server;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import com.yandex.app.model.HttpStatusCode;
 import com.yandex.app.model.SubTask;
+import com.yandex.app.model.SubTaskDto;
 import com.yandex.app.service.manager.Managers;
 import com.yandex.app.service.manager.TaskManager;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -45,8 +48,8 @@ public class SubTasksHandler implements HttpHandler {
         String response;
 
         if (Pattern.matches("^/subtasks$", path)) {
-            List<SubTask> subTasks = manager.getAllSubTasks();
-            response = gson.toJson(subTasks);
+            List<SubTaskDto> subTasksDto = converterSubTaskDto(manager.getAllSubTasks());
+            response = gson.toJson(subTasksDto);
             sendText(exchange, response);
         } else if (Pattern.matches("^/subtasks/\\d+$", path)) {
             String pathId = path.replaceFirst("/subtasks/", "");
@@ -54,13 +57,18 @@ public class SubTasksHandler implements HttpHandler {
             if (id > 0) {
                 SubTask subTask = manager.getSubTask(id);
                 if (subTask != null) {
-                    response = gson.toJson(subTask);
+                    SubTaskDto subTaskDto = new SubTaskDto(subTask.getName(),
+                            subTask.getDescription(), subTask.getDuration(),
+                            subTask.getStartTime(), subTask.getEndTime());
+                    response = gson.toJson(subTaskDto);
                     sendText(exchange, response);
                 }
-                writeResponse(exchange, "Подзадача с id = " + pathId + " нет.", 404);
+                writeResponse(exchange, "Подзадача с id = " + pathId + " нет.",
+                        HttpStatusCode.NOT_FOUND.getCode());
 
             } else {
-                writeResponse(exchange, "Некорректный id =  " + pathId, 406);
+                writeResponse(exchange, "Некорректный id =  " + pathId,
+                        HttpStatusCode.NOT_ACCEPTABLE.getCode());
             }
         }
     }
@@ -74,11 +82,12 @@ public class SubTasksHandler implements HttpHandler {
             SubTask subTaskCreate = manager.create(subTaskRequest);
             if (subTaskCreate != null) {
                 System.out.println("Подзадача создана");
-                exchange.sendResponseHeaders(201, 0);
+                exchange.sendResponseHeaders(HttpStatusCode.CREATED.getCode(), 0);
                 exchange.close();
 
             } else {
-                writeResponse(exchange, "Подзадача пересекается с существующими", 406);
+                writeResponse(exchange, "Подзадача пересекается с существующими",
+                        HttpStatusCode.NOT_ACCEPTABLE.getCode());
             }
         } else if (Pattern.matches("^/subtasks/\\d+$", path)) {
             String pathId = path.replaceFirst("/subtasks/", "");
@@ -89,15 +98,17 @@ public class SubTasksHandler implements HttpHandler {
                 SubTask subTaskCreate = manager.update(subTaskRequest);
                 if (subTaskCreate != null) {
                     System.out.println("Подзадача обновлена");
-                    exchange.sendResponseHeaders(201, 0);
+                    exchange.sendResponseHeaders(HttpStatusCode.CREATED.getCode(), 0);
                     exchange.close();
 
                 } else {
-                    writeResponse(exchange, "Подзадача пересекается с существующими", 406);
+                    writeResponse(exchange, "Подзадача пересекается с существующими",
+                            HttpStatusCode.NOT_ACCEPTABLE.getCode());
                 }
 
             } else {
-                writeResponse(exchange, "Некорректный id =  " + pathId, 406);
+                writeResponse(exchange, "Некорректный id =  " + pathId,
+                        HttpStatusCode.NOT_ACCEPTABLE.getCode());
             }
         }
     }
@@ -108,7 +119,7 @@ public class SubTasksHandler implements HttpHandler {
         if (Pattern.matches("^/subtasks$", path)) {
             manager.deleteSubTasks();
             System.out.println("Все подзадачи удалены");
-            exchange.sendResponseHeaders(201, 0);
+            exchange.sendResponseHeaders(HttpStatusCode.CREATED.getCode(), 0);
             exchange.close();
         } else if (Pattern.matches("^/subtasks/\\d+$", path)) {
             String pathId = path.replaceFirst("/subtasks/", "");
@@ -116,11 +127,12 @@ public class SubTasksHandler implements HttpHandler {
             if (id > 0) {
                 manager.deleteSubTaskInId(id);
                 System.out.println("Подзадача удалена");
-                exchange.sendResponseHeaders(201, 0);
+                exchange.sendResponseHeaders(HttpStatusCode.CREATED.getCode(), 0);
                 exchange.close();
 
             } else {
-                writeResponse(exchange, "Некорректный id =  " + pathId + pathId, 406);
+                writeResponse(exchange, "Некорректный id =  " + pathId + pathId,
+                        HttpStatusCode.NOT_ACCEPTABLE.getCode());
             }
         }
     }
@@ -128,7 +140,7 @@ public class SubTasksHandler implements HttpHandler {
     private void sendText(HttpExchange exchange, String text) throws IOException {
         byte[] resp = text.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        exchange.sendResponseHeaders(200, resp.length);
+        exchange.sendResponseHeaders(HttpStatusCode.OK.getCode(), resp.length);
         exchange.getResponseBody().write(resp);
     }
 
@@ -150,5 +162,15 @@ public class SubTasksHandler implements HttpHandler {
         }
     }
 
+    private List<SubTaskDto> converterSubTaskDto(List<SubTask> subTasks) {
+        List<SubTaskDto> subTaskDto = new ArrayList<>();
+
+        for (SubTask subTask : subTasks) {
+            subTaskDto.add(new SubTaskDto(subTask.getName(),
+                    subTask.getDescription(), subTask.getDuration(), subTask.getStartTime(), subTask.getEndTime()));
+        }
+
+        return subTaskDto;
+    }
 }
 
