@@ -1,21 +1,14 @@
 package com.yandex.test.service.manager;
 
 import com.yandex.app.model.Epic;
-import com.yandex.app.model.StartTimeComparator;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
-import com.yandex.app.service.history.HistoryManager;
-import com.yandex.app.service.manager.Managers;
 import com.yandex.app.service.manager.TaskManager;
 import com.yandex.test.model.UtilityClassForTests;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,11 +47,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
         final LocalDateTime timeEndIsEmpty = task.getEndTime();
         final long durationIsEmpty = task.getDuration();
 
-        assertNull(timeStartIsEmpty,"Время старта не пусто");
-        assertNull(timeEndIsEmpty,"Время конца не пусто");
-        assertEquals(0, durationIsEmpty,"Продолжительность не нулевая");
+        assertNull(timeStartIsEmpty, "Время старта не пусто");
+        assertNull(timeEndIsEmpty, "Время конца не пусто");
+        assertEquals(0, durationIsEmpty, "Продолжительность не нулевая");
 
-        task.createTime(20, "10:00 06.01.24");
+        task.createTime(20, LocalDateTime.of(2024, 1, 6, 10, 00));
 
         final LocalDateTime timeStartNotEmpty = LocalDateTime.of(2024, 1, 6, 10, 00);
         final LocalDateTime timeEndNotEmpty = LocalDateTime.of(2024, 1, 6, 10, 20);
@@ -68,9 +61,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         final LocalDateTime timeEndTask = task.getEndTime();
         final long durationTask = task.getDuration();
 
-        assertEquals(timeStartTask,timeStartNotEmpty,"Время старта не совпадает");
-        assertEquals(timeEndTask,timeEndNotEmpty,"Время конца не совпадает");
-        assertEquals(durationTask,durationNotEmpty,"Продолжительность не совпадает");
+        assertEquals(timeStartTask, timeStartNotEmpty, "Время старта не совпадает");
+        assertEquals(timeEndTask, timeEndNotEmpty, "Время конца не совпадает");
+        assertEquals(durationTask, durationNotEmpty, "Продолжительность не совпадает");
     }
 
     @Test
@@ -114,11 +107,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
         final LocalDateTime timeEndIsEmpty = subTask1.getEndTime();
         final long durationIsEmpty = subTask1.getDuration();
 
-        assertNull(timeStartIsEmpty,"Время старта не пусто");
-        assertNull(timeEndIsEmpty,"Время конца не пусто");
-        assertEquals(0, durationIsEmpty,"Продолжительность не нулевая");
+        assertNull(timeStartIsEmpty, "Время старта не пусто");
+        assertNull(timeEndIsEmpty, "Время конца не пусто");
+        assertEquals(0, durationIsEmpty, "Продолжительность не нулевая");
 
-        subTask1.createTime(20, "10:00 06.01.24");
+        subTask1.createTime(20, LocalDateTime.of(2024, 1, 6, 10, 00));
 
         final LocalDateTime timeStartNotEmpty = LocalDateTime.of(2024, 1, 6, 10, 00);
         final LocalDateTime timeEndNotEmpty = LocalDateTime.of(2024, 1, 6, 10, 20);
@@ -128,9 +121,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         final LocalDateTime timeEndTask = subTask1.getEndTime();
         final long durationTask = subTask1.getDuration();
 
-        assertEquals(timeStartTask,timeStartNotEmpty,"Время старта не совпадает");
-        assertEquals(timeEndTask,timeEndNotEmpty,"Время конца не совпадает");
-        assertEquals(durationTask,durationNotEmpty,"Продолжительность не совпадает");
+        assertEquals(timeStartTask, timeStartNotEmpty, "Время старта не совпадает");
+        assertEquals(timeEndTask, timeEndNotEmpty, "Время конца не совпадает");
+        assertEquals(durationTask, durationNotEmpty, "Продолжительность не совпадает");
     }
 
     @Test
