@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HttpTaskServerTest {
     private HttpTaskServer taskServer;
@@ -296,14 +297,10 @@ public class HttpTaskServerTest {
         Type subTaskType = new TypeToken<ArrayList<SubTaskDto>>() {
         }.getType();
         List<SubTaskDto> subTaskDto = gson.fromJson(response.body(), subTaskType);
-        List<SubTask> actual = new ArrayList<>();
-
-        if (!subTaskDto.isEmpty()) {
-            for (SubTaskDto task : subTaskDto) {
-                actual.add(new SubTask(task.getName(),
-                        task.getDescription(), epic1, task.getDuration(), task.getStartTime()));
-            }
-        }
+        List<SubTask> actual = subTaskDto.stream()
+                .map(task -> new SubTask(task.getName(),
+                        task.getDescription(), epic1, task.getDuration(), task.getStartTime()))
+                .collect(Collectors.toList());
 
         Assertions.assertNotNull(actual, "Список пуст");
         Assertions.assertEquals(1, actual.size(), "Неверное количество");

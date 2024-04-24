@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 public class SubTasksHandler implements HttpHandler {
@@ -163,14 +164,11 @@ public class SubTasksHandler implements HttpHandler {
     }
 
     private List<SubTaskDto> converterSubTaskDto(List<SubTask> subTasks) {
-        List<SubTaskDto> subTaskDto = new ArrayList<>();
-
-        for (SubTask subTask : subTasks) {
-            subTaskDto.add(new SubTaskDto(subTask.getName(),
-                    subTask.getDescription(), subTask.getDuration(), subTask.getStartTime(), subTask.getEndTime()));
-        }
-
-        return subTaskDto;
+        return subTasks.stream()
+                .map(subTask -> new SubTaskDto(subTask.getName(),
+                        subTask.getDescription(), subTask.getDuration(), subTask.getStartTime(), subTask.getEndTime())
+                )
+                .collect(Collectors.toList());
     }
 }
 
