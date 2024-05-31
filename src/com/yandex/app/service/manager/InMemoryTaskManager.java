@@ -251,16 +251,12 @@ public class InMemoryTaskManager implements TaskManager {
             if (subTask.getDuration() == 0) {
                 continue;
             }
-
             if (startTime == null || subTask.getStartTime().isBefore(startTime)) { //проверка на начало
                 startTime = subTask.getStartTime();
-
             }
             if (endTime == null || subTask.getEndTime().isAfter(endTime)) {
                 endTime = subTask.getEndTime();
-
             }
-
             duration = duration + subTask.getDuration();
         }
         if (startTime != null) {
