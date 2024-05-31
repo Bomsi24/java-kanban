@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
@@ -62,7 +63,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         if (value == null) {
             return new ArrayList<>();
         }
-        String[] arrayHistory = parsingFile(value).split("\n");
+        String[] arrayHistory = Objects.requireNonNull(parsingFile(value)).split("\n");
         if (arrayHistory.length < 8) {
             return new ArrayList<>();
         }
@@ -119,7 +120,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 subTask.setStatus(Statuses.valueOf(word[3]));
                 if (isTime) {
                     subTask.createTime(duration, startTime);
-                    //updateStatusEpic(epics.get(Integer.parseInt(word[7])));
                 }
                 update(subTask);
                 return subTask;
@@ -128,9 +128,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     protected void save() {
-        try {
-            Writer fileWriter = new FileWriter(fileSave);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        try (Writer fileWriter = new FileWriter(fileSave);// изменил и убрал метод close()
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             String taskFields = "id,type,name,status,description,duration,startTime,epic";
             bufferedWriter.write(taskFields);
 
@@ -151,12 +150,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
             bufferedWriter.write("\n");
             bufferedWriter.write(historyToString(historyManager));
-            bufferedWriter.close();
         } catch (IOException exception) {
             throw new ManagerSaveException("Ошибка при создании задачи");
         }
     }
-
 
     @Override
     public Task create(Task task) {
