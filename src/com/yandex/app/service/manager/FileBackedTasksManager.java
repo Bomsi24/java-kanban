@@ -128,7 +128,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     protected void save() {
-        try (Writer fileWriter = new FileWriter(fileSave);// изменил и убрал метод close()
+        try (Writer fileWriter = new FileWriter(fileSave);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             String taskFields = "id,type,name,status,description,duration,startTime,epic";
             bufferedWriter.write(taskFields);
