@@ -13,7 +13,18 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, Task> tasks = new HashMap<>();
     protected final Map<Integer, Epic> epics = new HashMap<>();
     protected final Map<Integer, SubTask> subTasks = new HashMap<>();
-    protected final Set<Task> prioritizedTasks = new TreeSet<>(new StartTimeComparator());
+    protected final Set<Task> prioritizedTasks = new TreeSet<>(((o1, o2) -> {
+        if (o1.getStartTime() != null && o2.getStartTime() != null) {
+            return o1.getStartTime().compareTo(o2.getStartTime());
+        }
+        if (o1.getStartTime() != null) {
+            return -1;
+        }
+        if (o2.getStartTime() != null) {
+            return 1;
+        }
+        return Integer.compare(o1.getId(), o2.getId());
+    }));
 
     @Override
     public Task create(Task task) {
@@ -215,6 +226,7 @@ public class InMemoryTaskManager implements TaskManager {
                         break;
                     case IN_PROGRESS:
                         statusInProgress++;
+                        break;
                     case DONE:
                         statusDone++;
                         break;
@@ -242,16 +254,14 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
         LocalDateTime startTime = null;
-        String startTimeString = null;
         LocalDateTime endTime = null;
-        String endTimeString = null;
         long duration = 0;
 
         for (SubTask subTask : subTasksList) {
             if (subTask.getDuration() == 0) {
                 continue;
             }
-            if (startTime == null || subTask.getStartTime().isBefore(startTime)) { //проверка на начало
+            if (startTime == null || subTask.getStartTime().isBefore(startTime)) {
                 startTime = subTask.getStartTime();
             }
             if (endTime == null || subTask.getEndTime().isAfter(endTime)) {
